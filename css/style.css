@@ -5,4 +5,12 @@
   border-radius: 5px;
   color: red;  
   margin-bottom: 10px;
+  overflow:hidden;
+}
+
+.ball {
+  fill: #337ab7;
+}
+.boundary {
+  fill: #e0e0e0;
 }
