@@ -1,4 +1,5 @@
-var clock;
+var clock,
+    ballstream;
 var clockSub;
 
 var svg;
@@ -42,7 +43,8 @@ var collisionDetection = function(){
 
 var initEnvironment = function(){
   balls = [
-    new Ball(w/2,h/8,20,1.03)
+    new Ball(w/2,h/8,30,1.03),
+    new Ball(w/3,h/8,20,1.03)
   ];
   boundaries = [
     new Ground(0,h-20,20,w)
@@ -69,6 +71,21 @@ var initEnvironment = function(){
   }
 }
 
+function initBallStream() {
+  ballstream = Rx.Observable.from(svg.selectAll(".ball").data(balls)[0]).subscribe(
+    function (x) {
+      x.attr("cy", 1); //write wrapper for selectall? selectforeach?
+//      x.attr("cy", function(d) { return d.y=d.y*d.acc; });
+    },
+    function (err) {
+      console.log('Error: ' + err);
+    },
+    function () {
+      console.log('Completed');
+    }
+  );
+}
+
 function createObservable(element, eventType) {
 
   return Rx.Observable.create(function (observer) {
@@ -89,6 +106,7 @@ function createObservable(element, eventType) {
 function init() {
   initButtons();
   initEnvironment();
+  initBallStream();
   clockInit();
 }
 
@@ -161,7 +179,7 @@ function subscribeToClock() {
   clockSub = clock.subscribe(
     function (x) {
       if(!collisionDetection()){
-        svg.selectAll(".ball").data(balls).attr("cy", function(d) { return d.y=d.y*d.acc; });
+        initBallStream();
       }
     },
     function (e) {
