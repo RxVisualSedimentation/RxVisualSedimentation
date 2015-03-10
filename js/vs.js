@@ -1,6 +1,7 @@
 var clock,
   ballstream;
 var clockSub;
+var idcounter;
 
 var svg;
 var w = 800,
@@ -12,11 +13,13 @@ var collided;
 /*
  * Ball
  */
-function Ball(x, y, r, a) {
+function Ball(x, y, r, a, t) {
   this.x = x;
   this.y = y;
   this.r = r;
   this.acc = a;
+  this.age = t;
+  this.id = idcounter++;
 }
 
 /*
@@ -31,13 +34,9 @@ function Ground(x, y, h, w) {
 
 
 var initEnvironment = function () {
-
   boundaries = [
     new Ground(0, h - 20, 20, w)
   ];
-
-  var collided = false;
-
   svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 
   for (var i in boundaries) {
@@ -46,14 +45,7 @@ var initEnvironment = function () {
       .attr("y", boundary.y)
       .attr("height", boundary.h)
       .attr("width", boundary.w)
-      .attr("class", "boundary")
-  }
-  for (var i in balls) {
-    var ball = balls[i];
-    svg.append("circle").attr("r", ball.r)
-      .attr("cx", ball.x)
-      .attr("cy", ball.y)
-      .attr("class", "ball")
+      .attr("class", "boundary");
   }
 }
 
@@ -75,15 +67,16 @@ function createObservable(element, eventType) {
 };
 
 function init() {
+  idcounter = 0;
   initButtons();
-  // initEnvironment();
+  initEnvironment();
   // initBallStream();
   clockInit();
   clock
     .scan(initState(), function(state,time) { return state.update(time) })
     .subscribe(
-      function (x) {
-        console.log("Current Time: " + x.time);
+      function (s) {
+        redraw(s);
       },
       function (e) {
         console.log('onError: %s', e);
@@ -92,6 +85,26 @@ function init() {
         console.log('onCompleted');
       }
     );
+}
+
+function redraw(state) {
+  state.circles
+  .filter(function(circle){ return circle.age === 0})
+  .map(function (circle) {
+      svg.append("circle").attr("r", circle.r)
+      .attr("cx", circle.x)
+      .attr("cy", circle.y)
+      .attr("id", "circle"+circle.id)
+      .attr("class", "ball");
+    } 
+  );    
+  state.circles
+  .filter(function(circle){ return circle.age > 0})
+  .map(function (circle) {
+    svg
+    .select("#circle"+circle.id)
+      .attr("cy", circle.y);
+  });
 }
 
 function initButtons() {
@@ -126,11 +139,15 @@ function initButtons() {
 function initState() {
   var state = {
     circles: [
-      new Ball(w / 2, h / 8, 30, 1.03),
-      new Ball(w / 3, h / 8, 20, 1.03)
+      new Ball(w / 2, h / 8, 30, 1.03, -1),
+      new Ball(w / 3, h / 8, 20, 1.03, -1)
     ],
     time : 0,
     update : function(time) {
+      this.circles.map(function (circle) {
+        circle.age += 1;
+        circle.y += 2;
+      });
       this.time += 1;
       return this;
     }
@@ -141,7 +158,7 @@ function initState() {
 function clockInit() {
   clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    1000 /* 1000 ms */
+    20 /* 200 ms */
   )
 }
 
