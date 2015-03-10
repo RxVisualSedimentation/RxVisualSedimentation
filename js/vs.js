@@ -29,24 +29,9 @@ function Ground(x, y, h, w) {
   this.w = w;
 }
 
-var collisionDetection = function () {
-  for (var i in balls) {
-    var ball = balls[i];
-    for (var j in boundaries) {
-      var boundary = boundaries[j];
-      if ((ball.y * ball.acc) > boundary.y - ball.r) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
 var initEnvironment = function () {
-  balls = [
-    new Ball(w / 2, h / 8, 30, 1.03),
-    new Ball(w / 3, h / 8, 20, 1.03)
-  ];
+
   boundaries = [
     new Ground(0, h - 20, 20, w)
   ];
@@ -70,24 +55,6 @@ var initEnvironment = function () {
       .attr("cy", ball.y)
       .attr("class", "ball")
   }
-}
-
-function initBallStream() {
-  ballstream = Rx.Observable.from(svg.selectAll(".ball")[0]);
-  var ballSub = ballstream.subscribe(
-    function (x) {
-      var cy = parseInt(x.getAttribute("cy"));
-
-      x.setAttribute("cy", cy + 1);
-      //x.setAttribute("cy", function(d) { return d.y=d.y*d.acc; });
-    },
-    function (err) {
-      console.log('Error: ' + err);
-    },
-    function () {
-      console.log('Completed');
-    }
-  );
 }
 
 function createObservable(element, eventType) {
@@ -171,56 +138,11 @@ function initState() {
   return state;
 }
 
-function multiObserverables() {
-  // Creates an observable sequence of 5 integers, starting from 1
-  var a = Rx.Observable.range(1, 10);
-  var b = Rx.Observable.range(5, 10)
-
-  var observer = Rx.Observer.create(
-    function (x) {
-      console.log('onNext: %s', x);
-    },
-    function (e) {
-      console.log('onError: %s', e);
-    },
-    function () {
-      console.log('onCompleted');
-    }
-  );
-
-  var x = Rx.Observable.zip(a, b, function (a1, b1) {
-      return a1 * b1;
-    })
-    .subscribe(observer);
-}
-
 function clockInit() {
   clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    1000 /* 250 ms */
+    1000 /* 1000 ms */
   )
-  // clock = source.publish();
-  // clock.connect();
-}
-
-function unsubscribeFromClock() {
-  clockSub.dispose();
-}
-
-function subscribeToClock() {
-  clockSub = clock.subscribe(
-    function (x) {
-      if (!collisionDetection()) {
-        initBallStream();
-      }
-    },
-    function (e) {
-      console.log('onError: %s', e);
-    },
-    function () {
-      console.log('onCompleted');
-    }
-  );
 }
 
 $(document).ready(init);
