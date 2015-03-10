@@ -72,10 +72,12 @@ var initEnvironment = function(){
 }
 
 function initBallStream() {
-  ballstream = Rx.Observable.from(svg.selectAll(".ball").data(balls)[0]).subscribe(
+  ballstream = Rx.Observable.from(svg.selectAll(".ball")[0]).subscribe(
     function (x) {
-      x.attr("cy", 1); //write wrapper for selectall? selectforeach?
-//      x.attr("cy", function(d) { return d.y=d.y*d.acc; });
+      var cy = parseInt(x.getAttribute("cy"));
+      
+      x.setAttribute("cy", cy+1);
+      //x.setAttribute("cy", function(d) { return d.y=d.y*d.acc; });
     },
     function (err) {
       console.log('Error: ' + err);
