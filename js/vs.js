@@ -1,9 +1,10 @@
 var clock,
-    ballstream;
+  ballstream;
 var clockSub;
 
 var svg;
-var w = 800, h = 600;
+var w = 800,
+  h = 600;
 var balls;
 var boundaries;
 var collided;
@@ -11,7 +12,7 @@ var collided;
 /*
  * Ball
  */
-function Ball(x,y,r,a){
+function Ball(x, y, r, a) {
   this.x = x;
   this.y = y;
   this.r = r;
@@ -21,19 +22,19 @@ function Ball(x,y,r,a){
 /*
  * Ground
  */
-function Ground(x,y,h,w){
+function Ground(x, y, h, w) {
   this.x = x;
   this.y = y;
   this.h = h;
   this.w = w;
 }
 
-var collisionDetection = function(){
-  for(var i in balls) {
+var collisionDetection = function () {
+  for (var i in balls) {
     var ball = balls[i];
-    for(var j in boundaries) {
+    for (var j in boundaries) {
       var boundary = boundaries[j];
-      if((ball.y*ball.acc)>boundary.y-ball.r){
+      if ((ball.y * ball.acc) > boundary.y - ball.r) {
         return true;
       }
     }
@@ -41,42 +42,43 @@ var collisionDetection = function(){
   return false;
 }
 
-var initEnvironment = function(){
+var initEnvironment = function () {
   balls = [
-    new Ball(w/2,h/8,30,1.03),
-    new Ball(w/3,h/8,20,1.03)
+    new Ball(w / 2, h / 8, 30, 1.03),
+    new Ball(w / 3, h / 8, 20, 1.03)
   ];
   boundaries = [
-    new Ground(0,h-20,20,w)
+    new Ground(0, h - 20, 20, w)
   ];
 
   var collided = false;
 
-  svg = d3.select("#environment").insert("svg") .attr("width", w).attr("height", h);
-  
-  for(var i in boundaries) {
+  svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
+
+  for (var i in boundaries) {
     var boundary = boundaries[i];
     svg.append("rect").attr("x", boundary.x)
-                      .attr("y", boundary.y)
-                      .attr("height", boundary.h)
-                      .attr("width", boundary.w)
-                      .attr("class", "boundary")
+      .attr("y", boundary.y)
+      .attr("height", boundary.h)
+      .attr("width", boundary.w)
+      .attr("class", "boundary")
   }
-  for(var i in balls) {
+  for (var i in balls) {
     var ball = balls[i];
     svg.append("circle").attr("r", ball.r)
-                        .attr("cx", ball.x)
-                        .attr("cy", ball.y)
-                        .attr("class", "ball")
+      .attr("cx", ball.x)
+      .attr("cy", ball.y)
+      .attr("class", "ball")
   }
 }
 
 function initBallStream() {
-  ballstream = Rx.Observable.from(svg.selectAll(".ball")[0]).subscribe(
+  ballstream = Rx.Observable.from(svg.selectAll(".ball")[0]);
+  var ballSub = ballstream.subscribe(
     function (x) {
       var cy = parseInt(x.getAttribute("cy"));
-      
-      x.setAttribute("cy", cy+1);
+
+      x.setAttribute("cy", cy + 1);
       //x.setAttribute("cy", function(d) { return d.y=d.y*d.acc; });
     },
     function (err) {
@@ -107,9 +109,22 @@ function createObservable(element, eventType) {
 
 function init() {
   initButtons();
-  initEnvironment();
-  initBallStream();
+  // initEnvironment();
+  // initBallStream();
   clockInit();
+  clock
+    .scan(initState(), function(state,time) { return state.update(time) })
+    .subscribe(
+      function (x) {
+        console.log("Current Time: " + x.time);
+      },
+      function (e) {
+        console.log('onError: %s', e);
+      },
+      function () {
+        console.log('onCompleted');
+      }
+    );
 }
 
 function initButtons() {
@@ -141,6 +156,21 @@ function initButtons() {
   );
 }
 
+function initState() {
+  var state = {
+    circles: [
+      new Ball(w / 2, h / 8, 30, 1.03),
+      new Ball(w / 3, h / 8, 20, 1.03)
+    ],
+    time : 0,
+    update : function(time) {
+      this.time += 1;
+      return this;
+    }
+  }
+  return state;
+}
+
 function multiObserverables() {
   // Creates an observable sequence of 5 integers, starting from 1
   var a = Rx.Observable.range(1, 10);
@@ -165,12 +195,12 @@ function multiObserverables() {
 }
 
 function clockInit() {
-  source = Rx.Observable.timer(
+  clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    10 /* 250 ms */
+    1000 /* 250 ms */
   )
-  clock = source.publish();
-  clock.connect();
+  // clock = source.publish();
+  // clock.connect();
 }
 
 function unsubscribeFromClock() {
@@ -180,7 +210,7 @@ function unsubscribeFromClock() {
 function subscribeToClock() {
   clockSub = clock.subscribe(
     function (x) {
-      if(!collisionDetection()){
+      if (!collisionDetection()) {
         initBallStream();
       }
     },
@@ -194,4 +224,3 @@ function subscribeToClock() {
 }
 
 $(document).ready(init);
-
