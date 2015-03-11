@@ -1,8 +1,11 @@
-var clock;
+var clock,
+  ballstream;
 var clockSub;
+var idcounter;
 
 var svg;
-var w = 800, h = 600;
+var w = 800,
+  h = 600;
 var balls;
 var boundaries;
 var collided;
@@ -10,62 +13,39 @@ var collided;
 /*
  * Ball
  */
-function Ball(x,y,r,a){
+function Ball(x, y, r, a, t) {
   this.x = x;
   this.y = y;
   this.r = r;
   this.acc = a;
+  this.age = t;
+  this.id = idcounter++;
 }
 
 /*
  * Ground
  */
-function Ground(x,y,h,w){
+function Ground(x, y, h, w) {
   this.x = x;
   this.y = y;
   this.h = h;
   this.w = w;
 }
 
-var collisionDetection = function(){
-  for(var i in balls) {
-    var ball = balls[i];
-    for(var j in boundaries) {
-      var boundary = boundaries[j];
-      if((ball.y*ball.acc)>boundary.y-ball.r){
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
-var initEnvironment = function(){
-  balls = [
-    new Ball(w/2,h/8,20,1.03)
-  ];
+var initEnvironment = function () {
   boundaries = [
-    new Ground(0,h-20,20,w)
+    new Ground(0, h - 20, 20, w)
   ];
+  svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 
-  var collided = false;
-
-  svg = d3.select("#environment").insert("svg") .attr("width", w).attr("height", h);
-  
-  for(var i in boundaries) {
+  for (var i in boundaries) {
     var boundary = boundaries[i];
     svg.append("rect").attr("x", boundary.x)
-                      .attr("y", boundary.y)
-                      .attr("height", boundary.h)
-                      .attr("width", boundary.w)
-                      .attr("class", "boundary")
-  }
-  for(var i in balls) {
-    var ball = balls[i];
-    svg.append("circle").attr("r", ball.r)
-                        .attr("cx", ball.x)
-                        .attr("cy", ball.y)
-                        .attr("class", "ball")
+      .attr("y", boundary.y)
+      .attr("height", boundary.h)
+      .attr("width", boundary.w)
+      .attr("class", "boundary");
   }
 }
 
@@ -87,9 +67,44 @@ function createObservable(element, eventType) {
 };
 
 function init() {
+  idcounter = 0;
   initButtons();
   initEnvironment();
+  // initBallStream();
   clockInit();
+  clock
+    .scan(initState(), function(state,time) { return state.update(time) })
+    .subscribe(
+      function (s) {
+        redraw(s);
+      },
+      function (e) {
+        console.log('onError: %s', e);
+      },
+      function () {
+        console.log('onCompleted');
+      }
+    );
+}
+
+function redraw(state) {
+  state.circles
+  .filter(function(circle){ return circle.age === 0})
+  .map(function (circle) {
+      svg.append("circle").attr("r", circle.r)
+      .attr("cx", circle.x)
+      .attr("cy", circle.y)
+      .attr("id", "circle"+circle.id)
+      .attr("class", "ball");
+    } 
+  );    
+  state.circles
+  .filter(function(circle){ return circle.age > 0})
+  .map(function (circle) {
+    svg
+    .select("#circle"+circle.id)
+      .attr("cy", circle.y);
+  });
 }
 
 function initButtons() {
@@ -121,57 +136,30 @@ function initButtons() {
   );
 }
 
-function multiObserverables() {
-  // Creates an observable sequence of 5 integers, starting from 1
-  var a = Rx.Observable.range(1, 10);
-  var b = Rx.Observable.range(5, 10)
-
-  var observer = Rx.Observer.create(
-    function (x) {
-      console.log('onNext: %s', x);
-    },
-    function (e) {
-      console.log('onError: %s', e);
-    },
-    function () {
-      console.log('onCompleted');
+function initState() {
+  var state = {
+    circles: [
+      new Ball(w / 2, h / 8, 30, 1.03, -1),
+      new Ball(w / 3, h / 8, 20, 1.03, -1)
+    ],
+    time : 0,
+    update : function(time) {
+      this.circles.map(function (circle) {
+        circle.age += 1;
+        circle.y += 2;
+      });
+      this.time += 1;
+      return this;
     }
-  );
-
-  var x = Rx.Observable.zip(a, b, function (a1, b1) {
-      return a1 * b1;
-    })
-    .subscribe(observer);
+  }
+  return state;
 }
 
 function clockInit() {
-  source = Rx.Observable.timer(
+  clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    10 /* 250 ms */
+    20 /* 200 ms */
   )
-  clock = source.publish();
-  clock.connect();
-}
-
-function unsubscribeFromClock() {
-  clockSub.dispose();
-}
-
-function subscribeToClock() {
-  clockSub = clock.subscribe(
-    function (x) {
-      if(!collisionDetection()){
-        svg.selectAll(".ball").data(balls).attr("cy", function(d) { return d.y=d.y*d.acc; });
-      }
-    },
-    function (e) {
-      console.log('onError: %s', e);
-    },
-    function () {
-      console.log('onCompleted');
-    }
-  );
 }
 
 $(document).ready(init);
-
