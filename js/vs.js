@@ -1,4 +1,6 @@
 var clock;
+var clockSubscription;
+var clockSubscriber;
 var idCounter;
 
 var svg;
@@ -63,6 +65,27 @@ var createObservable = function (element, eventType) {
             element.removeEventListener(eventType, eventHandler);
         };
     });
+};
+
+var subscribeToClock = function () {
+    "use strict";
+    clockSubscriber = clockSubscription
+        .subscribe(
+        function (s) {
+            redraw(s);
+        },
+        function (e) {
+            console.log('onError: %s', e);
+        },
+        function () {
+            console.log('onCompleted');
+        }
+    );
+};
+
+var unsubscribeFromClock = function () {
+    "use strict";
+    clockSubscriber.dispose();
 };
 
 var initButtons = function () {
@@ -146,27 +169,20 @@ var clockInit = function () {
     );
 };
 
+var initClockSubscription = function () {
+    "use strict";
+    clockSubscription = clock.scan(initState(), function (state, time) {
+        return state.update(time);
+    });
+};
+
 var init = function () {
     "use strict";
     idCounter = 0;
     initButtons();
     initEnvironment();
     clockInit();
-    clock
-        .scan(initState(), function (state, time) {
-            return state.update(time);
-        })
-        .subscribe(
-            function (s) {
-                redraw(s);
-            },
-            function (e) {
-                console.log('onError: %s', e);
-            },
-            function () {
-                console.log('onCompleted');
-            }
-        );
+    initClockSubscription();
 };
 
 $(document).ready(init);
