@@ -153,7 +153,9 @@ function initState() {
         update: function (time) {
             this.circles.map(function (circle) {
                 circle.age += 1;
-                circle.y += 1;
+                if((circle.y + circle.r) < h && (circle.y - circle.r>0)) {
+                    circle.y += 2;
+                }
             });
             this.time += 1;
             return this;
