@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rx Visual Sedimentation</title>
 
-  <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="ext/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 </head>
 
@@ -28,19 +28,15 @@
         <div class="panel panel-default">
           <div class="panel-heading">Clock controls</div>
           <div class="panel-body">
-            <a id="subClock" class="btn btn-primary" type="button">Subscribe</a>
-            <a id="unsubClock" class="btn btn-primary">Unsubscribe</a>
+            <a id="subscribeClock" class="btn btn-primary" type="button">Subscribe</a>
+            <a id="unsubscribeClock" class="btn btn-primary">Unsubscribe</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="ext/jquery/jquery.min.js"></script>
-  <script src="ext/bootstrap/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/2.3.25/rx.all.js"></script>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="js/vs.js"></script>
+  <script data-main="js/main" src="ext/requirejs/require.js"></script>
 </body>
 
 </html>
