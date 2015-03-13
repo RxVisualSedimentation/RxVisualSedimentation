@@ -9,45 +9,95 @@ var w = 800,
 var boundaries;
 
 /*
- * Ball
+ * Vector
  */
-function Ball(x, y, r, t) {
+function Vector(x, y) {
     "use strict";
-    this.drawn = false;
     this.x = x;
     this.y = y;
-    this.r = r;
-    this.age = t;
-    this.id = idCounter;
-    idCounter += 1;
+    this.length = function(){
+        return Math.sqrt(this.x*this.x+this.y*this.y);
+    };
+    this.minus = function(v2){
+        return new Vector(this.x-v2.x,this.y-v2.y);
+    };
+    this.multiply = function(i){
+        return new Vector(this.x*i,this.y*i);
+    };
+    this.divide = function(i){
+        return new Vector(this.x/i,this.y/i);
+    };
 }
 
 /*
- * Ground
+ * Circle
  */
-function Ground(x, y, h, w) {
+function Circle(position, radius, velocity, restitution) {
     "use strict";
-    this.x = x;
-    this.y = y;
-    this.h = h;
-    this.w = w;
+    this.radius = radius;
+    this.position = position;
+    this.mass = radius*radius*Math.PI;
+    this.velocity = velocity;
+    this.restitution = restitution;
+    this.intersectsWith = function(circle){
+        var r = Math.pow(this.radius + circle.radius,2);
+        return r < Math.pow(this.x+circle.x,2)+Math.pow(this.y+circle.y,2);
+    };
+    this.resolveCollisionWith = function(entity){
+        var relativeVelocity = entity.velocity.minus(this.velocity);
+        var velocityAlongNormal = dotProduct(relativeVelocity, normal);
+        if(velocityAlongNormal > 0){
+            return;
+        }
+        // Calculate the restitution.
+        var e = Math.min(this.restitution, entity.restitution);
+        // Calculate the impulse scalar.
+        var j = -(1+e) * velocityAlongNormal;
+        j /= 1/this.mass + 1/entity.mass;
+
+        // Apply Impulse
+        var impulse = j * normal;
+        this.velocity -= impulse.multiply(1/this.mass);
+        entity.velocity -= impulse.multiply(1/entity.mass);
+    };
+}
+
+var dotProduct = function(v1,v2){
+    "use strict";
+    return v1.x*v2.x+v1.y*v2.y;
+}
+
+/*
+ * Collision
+ */
+function Collision(a, b, penetration, normal) {
+    "use strict";
+    this.a = a;
+    this.b = b;
+    this.penetration = penetration;
+    this.normal = normal;
+    this.circleVsCircle = function(){
+        var r = a.radius + b.radius;
+        var n = b.position.minus(a.position);
+        var nSquared = Math.pow(n.x, 2)+Math.pow(n.y, 2);
+        if(nSquared > Math.pow(r, 2)){
+            return false;
+        }
+        var d = n.length();
+        if(d !== 0){
+            this.penetration = r - d;
+            this.normal = n.divide(d);
+        } else {
+            this.penetration = a.radius;
+            this.normal = new Vector(1,0);
+        }
+        return true;
+    };
 }
 
 var initEnvironment = function () {
     "use strict";
-    boundaries = [
-        new Ground(0, h - 20, 20, w)
-    ];
     svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
-
-    boundaries.forEach(function (element) {
-        var boundary = element;
-        svg.append("rect").attr("x", boundary.x)
-            .attr("y", boundary.y)
-            .attr("height", boundary.h)
-            .attr("width", boundary.w)
-            .attr("class", "boundary");
-    });
 };
 
 var createObservable = function (element, eventType) {
@@ -146,13 +196,12 @@ function initState() {
     "use strict";
     return {
         circles: [
-            new Ball(w / 2, h / 8, 30, 1.03, -1),
-            new Ball(w / 3, h / 8, 20, 1.03, -1)
+            new Circle(new Vector(w/2,h/2), 30, new Vector(-1,0), 1),
+            new Circle(new Vector(w/3,h/2), 20, new Vector(1,0), 1)
         ],
         time: 0,
         update: function (time) {
             this.circles.map(function (circle) {
-                circle.age += 1;
                 if((circle.y + circle.r) < h && (circle.y - circle.r>0)) {
                     circle.y += 2;
                 }
@@ -186,5 +235,3 @@ var init = function () {
     clockInit();
     initClockSubscription();
 };
-
-$(document).ready(init);
