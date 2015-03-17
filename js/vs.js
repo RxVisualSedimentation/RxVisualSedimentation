@@ -27,6 +27,9 @@ function Vector(x, y) {
     this.divide = function(i){
         return new Vector(this.x/i,this.y/i);
     };
+    this.dotProduct = function(v2){
+        return this.x*v2.x+this.y*v2.y;
+    }
 }
 
 /*
@@ -60,11 +63,6 @@ function Circle(position, radius, velocity, restitution) {
         this.velocity -= impulse.multiply(1/this.mass);
         entity.velocity -= impulse.multiply(1/entity.mass);
     };
-}
-
-var dotProduct = function(v1,v2){
-    "use strict";
-    return v1.x*v2.x+v1.y*v2.y;
 }
 
 /*
