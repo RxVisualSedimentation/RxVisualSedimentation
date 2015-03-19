@@ -2,6 +2,12 @@
 
 var bodyId;
 
+/**
+ * Create an observable for the given element which has the given events.
+ * @param element - Create the observable for this element.
+ * @param eventType - The element should emit these type of events.
+ * @returns {Rx.Observable<T>} - The resulting observable.
+ */
 var createEventObservable = function (element, eventType) {
   return Rx.Observable.create(function (observer) {
 
@@ -18,8 +24,10 @@ var createEventObservable = function (element, eventType) {
   });
 };
 
-/*
+/**
  * Creates all possible pairs of bodies.
+ * @param bodies - All the bodies in the environment.
+ * @returns {Array} - All Possible Pairs without duplicates.
  */
 var generatePairs = function (bodies) {
   var pairs = [];
@@ -31,6 +39,10 @@ var generatePairs = function (bodies) {
   return pairs;
 };
 
+/**
+ * Generate a new, unique number for every body.
+ * @returns {number}
+ */
 var nextBodyId = function () {
   if (bodyId == null) {
     bodyId = 0;

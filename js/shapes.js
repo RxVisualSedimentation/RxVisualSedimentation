@@ -1,17 +1,27 @@
 "use strict";
 
-/*
+/**
  * Circle
+ * @param position - vector of the position.
+ * @param radius - the radius of the circle.
+ * @param velocity - the speed that the circle is travelling at.
+ * @param restitution - the bounciness of the circle.
+ * @constructor
  */
 function Circle(position, radius, velocity, restitution) {
   this.drawn = false;
   this.id = nextBodyId();
   this.radius = radius;
   this.position = position;
-  this.mass = 1;//radius * radius * Math.PI;
+  this.mass = 1; //radius * radius * Math.PI;
   this.velocity = velocity;
   this.restitution = restitution;
 
+  /**
+   * Adjust the resulting properties caused by the collision for the given entity.
+   * @param entity
+   * @param normal - The vector of the general impulse for the entity.
+   */
   this.resolveCollisionWith = function (entity, normal) {
     var relativeVelocity = entity.velocity.minus(this.velocity);
     var velocityAlongNormal = relativeVelocity.dotProduct(normal);
@@ -30,6 +40,10 @@ function Circle(position, radius, velocity, restitution) {
     entity.velocity = entity.velocity.add(impulse.multiply(1 / entity.mass));
   };
 
+  /**
+   * Update the position of the circle.
+   * @param dt - the change in time.
+   */
   this.updatePosition = function(dt){
     var distanceVector = this.velocity.multiply(dt);
     this.position = this.position.add(distanceVector);
