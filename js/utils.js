@@ -1,4 +1,7 @@
 "use strict";
+
+var bodyId;
+
 var createEventObservable = function (element, eventType) {
   return Rx.Observable.create(function (observer) {
 
@@ -20,11 +23,18 @@ var createEventObservable = function (element, eventType) {
  */
 var generatePairs = function (bodies) {
   var pairs = [];
-  for (var i = 0; i < odies.length; i++) {
+  for (var i = 0; i < bodies.length; i++) {
     for (var j = (i + 1); j < bodies.length; j++) {
       pairs.push(new Pair(bodies[i], bodies[j]));
     }
   }
 
   return pairs;
+}
+
+var nextBodyId = function () {
+  if(bodyId==null){
+    bodyId=0;
+  }
+  return bodyId++;
 }

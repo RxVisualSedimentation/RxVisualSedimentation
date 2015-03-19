@@ -20,11 +20,16 @@ var unsubscribeFromClock = function () {
 var clockInit = function () {
   clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    10 /* 200 ms */
+    25 /* 25 ms */
   );
 };
 var initClockSubscription = function () {
-  clockSubscription = clock.scan(initState(), function (state, time) {
+  clockSubscription = 
+    clock
+      .map(function (time) {
+        return 1;
+      })
+      .scan(initState(), function (state, time) {
     return state.update(time);
   });
 };
