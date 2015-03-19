@@ -1,4 +1,5 @@
 "use strict";
+
 /*
  * Circle
  */
@@ -7,14 +8,10 @@ function Circle(position, radius, velocity, restitution) {
   this.id = nextBodyId();
   this.radius = radius;
   this.position = position;
-  //this.mass = radius * radius * Math.PI;
-  this.mass = 1;
+  this.mass = 1;//radius * radius * Math.PI;
   this.velocity = velocity;
   this.restitution = restitution;
-  this.intersectsWith = function (circle) {
-    var r = Math.pow(this.radius + circle.radius, 2);
-    return r < Math.pow(this.x + circle.x, 2) + Math.pow(this.y + circle.y, 2);
-  };
+
   this.resolveCollisionWith = function (entity, normal) {
     var relativeVelocity = entity.velocity.minus(this.velocity);
     var velocityAlongNormal = relativeVelocity.dotProduct(normal);
@@ -32,6 +29,7 @@ function Circle(position, radius, velocity, restitution) {
     this.velocity = this.velocity.minus(impulse.multiply(1 / this.mass));
     entity.velocity = entity.velocity.add(impulse.multiply(1 / entity.mass));
   };
+
   this.updatePosition = function(dt){
     var distanceVector = this.velocity.multiply(dt);
     this.position = this.position.add(distanceVector);
