@@ -1,5 +1,9 @@
 "use strict";
 
+var clock;
+var clockSubscription;
+var clockSubscriber;
+
 var subscribeToClock = function () {
   clockSubscriber = clockSubscription
     .subscribe(
@@ -14,22 +18,25 @@ var subscribeToClock = function () {
       }
     );
 };
+
 var unsubscribeFromClock = function () {
   clockSubscriber.dispose();
 };
+
 var clockInit = function () {
   clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    25 /* 25 ms */
+    10 /* 25 ms */
   );
 };
+
 var initClockSubscription = function () {
-  clockSubscription = 
+  clockSubscription =
     clock
-      .map(function (time) {
+      .map(function () {
         return 1;
       })
-      .scan(initState(), function (state, time) {
-    return state.update(time);
-  });
+      .scan(initState(), function (state, dt) {
+        return state.update(dt);
+      });
 };

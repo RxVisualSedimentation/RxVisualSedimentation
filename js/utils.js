@@ -28,13 +28,12 @@ var generatePairs = function (bodies) {
       pairs.push(new Pair(bodies[i], bodies[j]));
     }
   }
-
   return pairs;
-}
+};
 
 var nextBodyId = function () {
-  if(bodyId==null){
-    bodyId=0;
+  if (bodyId == null) {
+    bodyId = 0;
   }
   return bodyId++;
-}
+};

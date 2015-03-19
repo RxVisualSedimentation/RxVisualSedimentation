@@ -1,11 +1,12 @@
 "use strict";
+
 /*
  * Collision
  */
 function Collision(a, b, penetration, normal) {
   this.a = a;
   this.b = b;
-  this.penetration = penetration;
+  //this.penetration = penetration;
   this.normal = normal;
   this.circleVsCircle = function () {
     var r = a.radius + b.radius;
@@ -16,10 +17,10 @@ function Collision(a, b, penetration, normal) {
     }
     var d = n.length();
     if (d !== 0) {
-      this.penetration = r - d;
+      //this.penetration = r - d;
       this.normal = n.divide(d);
     } else {
-      this.penetration = a.radius;
+      //this.penetration = a.radius;
       this.normal = new Vector(1, 0);
     }
     return true;
@@ -68,24 +69,30 @@ function State() {
   this.bodies = [];
   this.addBody = function (body) {
     this.bodies.push(body);
-  }
+  };
   this.update = function (dt) {
     var pairs = generatePairs(this.bodies);
-    var collisions = [];
-    for (var i in pairs) {
-      var collision = new Collision(pairs[i].a, pairs[i].b, null, null);
-      var collided = collision.circleVsCircle();
-      if (collided) {
-        collisions.push(collision);
-      }
-    }
-    for (var i in collisions) {
-      collisions[i].a.resolveCollisionWith(collisions[i].b, collisions[i].normal);
-    }
-    for (var i in this.bodies) {
-      this.bodies[i].updatePosition(dt);
-    }
+    var collisions = obtainCollisions(pairs);
+
+    collisions.map(function(collision){
+      collision.a.resolveCollisionWith(collision.b, collision.normal);
+    });
+
+    this.bodies.map(function(body){
+      body.updatePosition(dt);
+    });
     return this;
   }
-
 }
+
+var obtainCollisions = function(pairs){
+  var collisions = [];
+  pairs.map(function(pair){
+    var collision = new Collision(pair.a, pair.b, null, null);
+    var collided = collision.circleVsCircle();
+    if (collided) {
+      collisions.push(collision);
+    }
+  });
+  return collisions;
+};

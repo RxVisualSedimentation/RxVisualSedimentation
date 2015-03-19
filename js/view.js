@@ -1,10 +1,8 @@
 "use strict";
+
 var svg;
 var w = 800,
-  h = 600;
-
-
-var boundaries;
+    h = 600;
 
 var initEnvironment = function () {
   "use strict";
@@ -33,7 +31,6 @@ var redraw = function (state) {
         .attr("cy", circle.position.y);
     });
 };
-
 
 var initButtons = function () {
   createEventObservable(document.getElementById('subscribeClock'), 'click')
