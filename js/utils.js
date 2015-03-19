@@ -14,3 +14,17 @@ var createEventObservable = function (element, eventType) {
     };
   });
 };
+
+/*
+ * Creates all possible pairs of bodies.
+ */
+var generatePairs = function (bodies) {
+  var pairs = [];
+  for (var i = 0; i < odies.length; i++) {
+    for (var j = (i + 1); j < bodies.length; j++) {
+      pairs.push(new Pair(bodies[i], bodies[j]));
+    }
+  }
+
+  return pairs;
+}

@@ -48,3 +48,11 @@ function Vector(x, y) {
     return this.x * v2.x + this.y * v2.y;
   }
 }
+
+/*
+ * Pair
+ */
+function Pair(a, b) {
+  this.a = a;
+  this.b = b;
+}
