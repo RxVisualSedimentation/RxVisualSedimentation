@@ -13,7 +13,7 @@ require.config({
     },
     shim: {
         app: {
-            deps: ['utils', 'view'],
+            deps: ['utils', 'view', 'shapes', 'physics', 'time', 'rx', 'd3'],
             exports: 'app'
         },
         bootstrap: {
