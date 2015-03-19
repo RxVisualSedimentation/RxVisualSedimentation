@@ -12,26 +12,25 @@ var initEnvironment = function () {
 };
 
 var redraw = function (state) {
-  state.circles
+  state.bodies
     .filter(function (circle) {
       return circle.drawn === false;
     })
     .map(function (circle) {
-      svg.append("circle").attr("r", circle.r)
-        .attr("cx", circle.x)
-        .attr("cy", circle.y)
+      svg.append("circle").attr("r", circle.radius)
+        .attr("cx", circle.position.x)
+        .attr("cy", circle.position.y)
         .attr("id", "circle" + circle.id)
         .attr("class", "ball");
       circle.drawn = true;
     });
-  state.circles
-    .filter(function (circle) {
-      return circle.age > 0;
-    })
+  
+  state.bodies
     .map(function (circle) {
       svg
         .select("#circle" + circle.id)
-        .attr("cy", circle.y);
+        .attr("cx", circle.position.x)
+        .attr("cy", circle.position.y);
     });
 };
 

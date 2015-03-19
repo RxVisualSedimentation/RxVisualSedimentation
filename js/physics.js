@@ -35,6 +35,9 @@ function Vector(x, y) {
   this.length = function () {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   };
+  this.add = function (v2) {
+    return new Vector(this.x + v2.x, this.y + v2.y);
+  };
   this.minus = function (v2) {
     return new Vector(this.x - v2.x, this.y - v2.y);
   };
@@ -55,4 +58,34 @@ function Vector(x, y) {
 function Pair(a, b) {
   this.a = a;
   this.b = b;
+}
+
+/*
+ * State
+ */
+function State() {
+  this.gravity = new Vector(0, 5);
+  this.bodies = [];
+  this.addBody = function (body) {
+    this.bodies.push(body);
+  }
+  this.update = function (dt) {
+    var pairs = generatePairs(this.bodies);
+    var collisions = [];
+    for (var i in pairs) {
+      var collision = new Collision(pairs[i].a, pairs[i].b, null, null);
+      var collided = collision.circleVsCircle();
+      if (collided) {
+        collisions.push(collision);
+      }
+    }
+    for (var i in collisions) {
+      collisions[i].a.resolveCollisionWith(collisions[i].b, collisions[i].normal);
+    }
+    for (var i in this.bodies) {
+      this.bodies[i].updatePosition(dt);
+    }
+    return this;
+  }
+
 }
