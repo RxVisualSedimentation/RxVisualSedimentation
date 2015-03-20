@@ -5,20 +5,20 @@
  */
 require.config({
   paths: {
-    d3: '../ext/d3/d3.min',
+    app: 'app',
     bootstrap: '../ext/bootstrap/dist/js/bootstrap.min',
+    d3: '../ext/d3/d3.min',
     jquery: '../ext/jquery/dist/jquery.min',
-    rx: '../ext/rxjs/dist/rx.all.min',
     physics: 'physics',
+    rx: '../ext/rxjs/dist/rx.all.min',
     shapes: 'shapes',
     time: 'time',
     utils: 'utils',
-    view: 'view',
-    app: 'app'
+    view: 'view'
   },
   shim: {
     app: {
-      deps: ['utils', 'view', 'shapes', 'physics', 'time', 'rx', 'd3'],
+      deps: ['d3', 'physics', 'rx', 'shapes', 'time', 'utils', 'view'],
       exports: 'app'
     },
     bootstrap: {
