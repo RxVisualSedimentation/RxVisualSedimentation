@@ -43,8 +43,10 @@ function Circle(position, radius, velocity, restitution) {
   /**
    * Update the position of the circle.
    * @param dt - the change in time.
+   * @param gravity - the gravity vector.
    */
-  this.updatePosition = function(dt){
+  this.updatePosition = function(dt, gravity){
+    this.velocity = this.velocity.add(gravity);
     var distanceVector = this.velocity.multiply(dt);
     this.position = this.position.add(distanceVector);
   }
