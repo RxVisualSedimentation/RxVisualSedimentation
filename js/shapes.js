@@ -49,5 +49,13 @@ function Circle(position, radius, velocity, restitution) {
     this.velocity = this.velocity.add(gravity);
     var distanceVector = this.velocity.multiply(dt);
     this.position = this.position.add(distanceVector);
-  }
+  };
+
+  /**
+   * Update the radius of the circle.
+   * @param delta_radius - the change in radius.
+   */
+  this.updateRadius = function(delta_radius){
+    this.radius += delta_radius;
+  };
 }
