@@ -1,7 +1,12 @@
 "use strict";
 
-/*
+/**
  * Collision
+ * @param a - One of the two objects colliding.
+ * @param b - The other of the two objects colliding.
+ * @param penetration  - The amount of overlap caused by the collision.
+ * @param normal - The normal vector.
+ * @constructor
  */
 function Collision(a, b, penetration, normal) {
   this.a = a;
@@ -27,8 +32,11 @@ function Collision(a, b, penetration, normal) {
   };
 }
 
-/*
+/**
  * Vector
+ * @param x - The x-coordinate
+ * @param y - The y-coordinate
+ * @constructor
  */
 function Vector(x, y) {
   this.x = x;
@@ -53,23 +61,36 @@ function Vector(x, y) {
   }
 }
 
-/*
- * Pair
+/**
+ * Pair (of objects)
+ * @param a - One object
+ * @param b - Another object
+ * @constructor
  */
 function Pair(a, b) {
   this.a = a;
   this.b = b;
 }
 
-/*
+/**
  * State
+ * @constructor
  */
 function State() {
   this.gravity = new Vector(0, 5);
   this.bodies = [];
+  /**
+   * Add bodies to the environment.
+   * @param body - the to be added body.
+   */
   this.addBody = function (body) {
     this.bodies.push(body);
   };
+  /**
+   * Update the state for the given delta time.
+   * @param dt - delta time.
+   * @returns {State} - The updated state.
+   */
   this.update = function (dt) {
     var pairs = generatePairs(this.bodies);
     var collisions = obtainCollisions(pairs);
@@ -85,6 +106,11 @@ function State() {
   }
 }
 
+/**
+ * Obtains all the possible collisions.
+ * @param pairs - All the possible pairs of objects.
+ * @returns {Array} - The possible collisions.
+ */
 var obtainCollisions = function(pairs){
   var collisions = [];
   pairs.map(function(pair){

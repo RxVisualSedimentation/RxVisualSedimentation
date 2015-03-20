@@ -4,11 +4,18 @@ var svg;
 var w = 800,
     h = 600;
 
+/**
+ * Initialize the environment.
+ */
 var initEnvironment = function () {
   "use strict";
   svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 };
 
+/**
+ * Redraw the current state. Actually modify the svg elements.
+ * @param state - Apply the changes of the given state in the current canvas.
+ */
 var redraw = function (state) {
   state.bodies
     .filter(function (circle) {
@@ -32,6 +39,9 @@ var redraw = function (state) {
     });
 };
 
+/**
+ * Initialize all the buttons on the page.
+ */
 var initButtons = function () {
   createEventObservable(document.getElementById('subscribeClock'), 'click')
     .subscribe(

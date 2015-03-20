@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ * Configures require.js to include all required libraries and their dependencies.
+ */
 require.config({
   paths: {
     d3: '../ext/d3/d3.min',
@@ -27,6 +30,9 @@ require.config({
   }
 });
 
+/**
+ * Run require.js to actually include all the libraries.
+ */
 require(["app", "bootstrap", "d3", "jquery", "physics", "rx", "shapes", "time", "utils", "view"], function () {
   init();
 });
