@@ -8,6 +8,9 @@ var clockSubscriber;
  * Subscribe to the clock subscription.
  */
 var subscribeToClock = function () {
+  if(clockSubscriber != null) {
+    return;
+  }
   clockSubscriber = clockSubscription
     .subscribe(
       function (s) {
@@ -26,7 +29,10 @@ var subscribeToClock = function () {
  * Unsubscribe from the clock subscription.
  */
 var unsubscribeFromClock = function () {
-  clockSubscriber.dispose();
+  if(clockSubscriber != null) {
+    clockSubscriber.dispose();
+    clockSubscriber = null;
+  }
 };
 
 /**

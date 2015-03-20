@@ -46,6 +46,8 @@ var initButtons = function () {
   createEventObservable(document.getElementById('subscribeClock'), 'click')
     .subscribe(
       function (evt) {
+        $('#subscribeClock').addClass('disabled');
+        $('#unsubscribeClock').removeClass('disabled');
         subscribeToClock();
       },
       function (err) {
@@ -59,6 +61,8 @@ var initButtons = function () {
     .subscribe(
       function (evt) {
         unsubscribeFromClock();
+        $('#subscribeClock').removeClass('disabled');
+        $('#unsubscribeClock').addClass('disabled');
       },
       function (err) {
         console.log('error: ' + err);
