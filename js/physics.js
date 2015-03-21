@@ -2,8 +2,8 @@
 
 /**
  * Collision
- * @param a - One of the two objects colliding.
- * @param b - The other of the two objects colliding.
+ * @param a - One of the two bodies colliding.
+ * @param b - The other of the two bodies colliding.
  * @param penetration  - The amount of overlap caused by the collision.
  * @param normal - The normal vector.
  * @constructor
@@ -13,24 +13,32 @@ function Collision(a, b, penetration, normal) {
   this.b = b;
   //this.penetration = penetration;
   this.normal = normal;
-  this.circleVsCircle = function () {
-    var r = a.radius + b.radius;
-    var n = b.position.minus(a.position);
-    var nSquared = Math.pow(n.x, 2) + Math.pow(n.y, 2);
-    if (nSquared > Math.pow(r, 2)) {
-      return false;
-    }
-    var d = n.length();
-    if (d !== 0) {
-      //this.penetration = r - d;
-      this.normal = n.divide(d);
-    } else {
-      //this.penetration = a.radius;
-      this.normal = new Vector(1, 0);
-    }
-    return true;
-  };
 }
+
+/**
+ * Verifies whether a pair of bodies collide and returns an Collision.
+ * @param a - Pair of bodies
+ * @returns - A collision or null.
+ */
+Collision.circleVsCircle = function (pair) {
+  var a = pair.a;
+  var b = pair.b;
+  var r = a.radius + b.radius;
+  var n = b.position.minus(a.position);
+  var nSquared = Math.pow(n.x, 2) + Math.pow(n.y, 2);
+  if (nSquared > Math.pow(r, 2)) {
+    return null;
+  }
+  var d = n.length();
+  if (d !== 0) {
+    //var penetration = r - d;
+    var normal = n.divide(d);
+  } else {
+    //var penetration = a.radius;
+    var normal = new Vector(1, 0);
+  }
+  return new Collision(a, b, null, normal);
+};
 
 /**
  * Vector
@@ -95,11 +103,11 @@ function State() {
     var pairs = generatePairs(this.bodies);
     var collisions = obtainCollisions(pairs);
 
-    collisions.map(function(collision){
+    collisions.map(function (collision) {
       collision.a.resolveCollisionWith(collision.b, collision.normal);
     });
 
-    this.bodies.map(function(body){
+    this.bodies.map(function (body) {
       body.updatePosition(dt);
     });
     return this;
@@ -111,12 +119,11 @@ function State() {
  * @param pairs - All the possible pairs of objects.
  * @returns {Array} - The possible collisions.
  */
-var obtainCollisions = function(pairs){
+var obtainCollisions = function (pairs) {
   var collisions = [];
-  pairs.map(function(pair){
-    var collision = new Collision(pair.a, pair.b, null, null);
-    var collided = collision.circleVsCircle();
-    if (collided) {
+  pairs.map(function (pair) {
+    var collision = Collision.circleVsCircle(pair);
+    if (collision) {
       collisions.push(collision);
     }
   });
