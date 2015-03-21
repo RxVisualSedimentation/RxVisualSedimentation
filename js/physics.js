@@ -116,6 +116,22 @@ function Pair(a, b) {
 }
 
 /**
+ * Obtains all the possible collisions.
+ * @param pairs - All the possible pairs of objects.
+ * @returns {Array} - The possible collisions.
+ */
+Pair.obtainCollisions = function (pairs) {
+  var collisions = [];
+  pairs.map(function (pair) {
+    var collision = Collision.circleVsCircle(pair);
+    if (collision) {
+      collisions.push(collision);
+    }
+  });
+  return collisions;
+};
+
+/**
  * State
  * @constructor
  */
@@ -136,7 +152,7 @@ function State() {
    */
   this.update = function (dt) {
     var pairs = generatePairs(this.bodies);
-    var collisions = obtainCollisions(pairs);
+    var collisions = Pair.obtainCollisions(pairs);
 
     collisions.map(function (collision) {
       collision.a.resolveCollisionWith(collision.b, collision.normal);
@@ -148,19 +164,3 @@ function State() {
     return this;
   }
 }
-
-/**
- * Obtains all the possible collisions.
- * @param pairs - All the possible pairs of objects.
- * @returns {Array} - The possible collisions.
- */
-var obtainCollisions = function (pairs) {
-  var collisions = [];
-  pairs.map(function (pair) {
-    var collision = Collision.circleVsCircle(pair);
-    if (collision) {
-      collisions.push(collision);
-    }
-  });
-  return collisions;
-};
