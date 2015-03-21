@@ -24,7 +24,7 @@ Collision.circleVsCircle = function (pair) {
   var a = pair.a;
   var b = pair.b;
   var r = a.radius + b.radius;
-  var n = b.position.minus(a.position);
+  var n = Vector.subtract(b.position, a.position);
   var nSquared = Math.pow(n.x, 2) + Math.pow(n.y, 2);
   if (nSquared > Math.pow(r, 2)) {
     return null;
@@ -32,7 +32,7 @@ Collision.circleVsCircle = function (pair) {
   var d = n.length();
   if (d !== 0) {
     //var penetration = r - d;
-    var normal = n.divide(d);
+    var normal = Vector.divide(n, d)
   } else {
     //var penetration = a.radius;
     var normal = new Vector(1, 0);
@@ -52,21 +52,56 @@ function Vector(x, y) {
   this.length = function () {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   };
-  this.add = function (v2) {
-    return new Vector(this.x + v2.x, this.y + v2.y);
-  };
-  this.minus = function (v2) {
-    return new Vector(this.x - v2.x, this.y - v2.y);
-  };
-  this.multiply = function (i) {
-    return new Vector(this.x * i, this.y * i);
-  };
-  this.divide = function (i) {
-    return new Vector(this.x / i, this.y / i);
-  };
-  this.dotProduct = function (v2) {
-    return this.x * v2.x + this.y * v2.y;
-  }
+}
+
+/**
+ * Adds two vectors and returns the result.
+ * @param v1 - The first vector
+ * @param v2 - The second vector
+ * @returns - A new vector
+ */
+Vector.add = function (v1, v2) {
+  return new Vector(v1.x + v2.x, v1.y + v2.y);
+}
+
+/**
+ * Subtracts a vector from another vector and returns the result.
+ * @param v1 - The first vector
+ * @param v2 - The second vector
+ * @returns - A new vector
+ */
+Vector.subtract = function (v1, v2) {
+  return new Vector(v1.x - v2.x, v1.y - v2.y);
+}
+
+/**
+ * Multiplies two vectors and returns the result.
+ * @param v1 - The first vector
+ * @param v2 - The second vector
+ * @returns - A new vector
+ */
+Vector.multiply = function (v, factor) {
+  return new Vector(v.x * factor, v.y * factor);
+}
+
+/**
+ * Divides two vectors and returns the result.
+ * @param v1 - The first vector
+ * @param v2 - The second vector
+ * @returns - A new vector
+ */
+Vector.divide = function (v, factor) {
+  return new Vector(v.x / factor, v.y / factor);
+}
+
+/**
+ * Calculates the dot product of two vectors.
+ * @param v1 - The first vector
+ * @param v2 - The second vector
+ * @returns - The dot product
+ */
+Vector.dotProduct = function (v1, v2) {
+  return v1.x * v2.x + v1.y * v2.y;
 }
 
 /**
