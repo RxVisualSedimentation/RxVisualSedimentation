@@ -77,7 +77,8 @@ function Pair(a, b) {
  * @constructor
  */
 function State() {
-  this.gravity = new Vector(0, 5);
+  this.gravity = new Vector(0, 0.1);
+  this.deltaRadius = -0.1;
   this.bodies = [];
   /**
    * Add bodies to the environment.
@@ -94,13 +95,19 @@ function State() {
   this.update = function (dt) {
     var pairs = generatePairs(this.bodies);
     var collisions = obtainCollisions(pairs);
+    var gravity = this.gravity;
+    var deltaRadius = this.deltaRadius;
 
     collisions.map(function(collision){
       collision.a.resolveCollisionWith(collision.b, collision.normal);
     });
 
     this.bodies.map(function(body){
+      body.applyGravity(gravity);
       body.updatePosition(dt);
+      if(body.radius + deltaRadius > 0) {
+        body.updateRadius(deltaRadius);
+      }
     });
     return this;
   }

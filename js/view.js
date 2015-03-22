@@ -34,6 +34,7 @@ var redraw = function (state) {
     .map(function (circle) {
       svg
         .select("#circle" + circle.id)
+        .attr("r", circle.radius)
         .attr("cx", circle.position.x)
         .attr("cy", circle.position.y);
     });

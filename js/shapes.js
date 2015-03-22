@@ -41,11 +41,29 @@ function Circle(position, radius, velocity, restitution) {
   };
 
   /**
+   * Update the velocity of the circle by applying gravity.
+   * @param gravity - the gravity vector.
+   */
+  this.applyGravity = function(gravity){
+    this.velocity = this.velocity.add(gravity);
+  };
+
+  /**
    * Update the position of the circle.
    * @param dt - the change in time.
+   * @param gravity - the gravity vector.
    */
   this.updatePosition = function(dt){
+
     var distanceVector = this.velocity.multiply(dt);
     this.position = this.position.add(distanceVector);
-  }
+  };
+
+  /**
+   * Update the radius of the circle.
+   * @param delta_radius - the change in radius.
+   */
+  this.updateRadius = function(delta_radius){
+    this.radius += delta_radius;
+  };
 }
