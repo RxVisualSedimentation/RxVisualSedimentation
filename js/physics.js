@@ -103,7 +103,8 @@ function State() {
     });
 
     this.bodies.map(function(body){
-      body.updatePosition(dt,gravity);
+      body.applyGravity(gravity);
+      body.updatePosition(dt);
       if(body.radius + deltaRadius > 0) {
         body.updateRadius(deltaRadius);
       }
