@@ -15,11 +15,12 @@ require.config({
     shapes: 'shapes',
     time: 'time',
     utils: 'utils',
+    vector: 'vector',
     view: 'view'
   },
   shim: {
     app: {
-      deps: ['d3', 'monet', 'physics', 'rx', 'shapes', 'time', 'utils', 'view'],
+      deps: ['d3', 'monet', 'physics', 'rx', 'shapes', 'time', 'utils', 'vector', 'view'],
       exports: 'app'
     },
     bootstrap: {
@@ -34,6 +35,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(["app", "bootstrap", "d3", "jquery", "monet", "physics", "rx", "shapes", "time", "utils", "view"], function () {
+require(["app", "bootstrap", "d3", "jquery", "monet", "physics", "rx", "shapes", "time", "utils", "vector", "view"], function () {
   init();
 });
