@@ -2,8 +2,8 @@
 
 /**
  * Collision
- * @param a - One of the two objects colliding.
- * @param b - The other of the two objects colliding.
+ * @param a - One of the two bodies colliding.
+ * @param b - The other of the two bodies colliding.
  * @param penetration  - The amount of overlap caused by the collision.
  * @param normal - The normal vector.
  * @constructor
@@ -13,53 +13,32 @@ function Collision(a, b, penetration, normal) {
   this.b = b;
   //this.penetration = penetration;
   this.normal = normal;
-  this.circleVsCircle = function () {
-    var r = a.radius + b.radius;
-    var n = b.position.minus(a.position);
-    var nSquared = Math.pow(n.x, 2) + Math.pow(n.y, 2);
-    if (nSquared > Math.pow(r, 2)) {
-      return false;
-    }
-    var d = n.length();
-    if (d !== 0) {
-      //this.penetration = r - d;
-      this.normal = n.divide(d);
-    } else {
-      //this.penetration = a.radius;
-      this.normal = new Vector(1, 0);
-    }
-    return true;
-  };
 }
 
 /**
- * Vector
- * @param x - The x-coordinate
- * @param y - The y-coordinate
- * @constructor
+ * Verifies whether a pair of bodies collide and returns an Collision.
+ * @param a - Pair of bodies
+ * @returns - A collision or null.
  */
-function Vector(x, y) {
-  this.x = x;
-  this.y = y;
-  this.length = function () {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  };
-  this.add = function (v2) {
-    return new Vector(this.x + v2.x, this.y + v2.y);
-  };
-  this.minus = function (v2) {
-    return new Vector(this.x - v2.x, this.y - v2.y);
-  };
-  this.multiply = function (i) {
-    return new Vector(this.x * i, this.y * i);
-  };
-  this.divide = function (i) {
-    return new Vector(this.x / i, this.y / i);
-  };
-  this.dotProduct = function (v2) {
-    return this.x * v2.x + this.y * v2.y;
+Collision.circleVsCircle = function (pair) {
+  var a = pair.a;
+  var b = pair.b;
+  var r = a.radius + b.radius;
+  var n = Vector.subtract(b.position, a.position);
+  var nSquared = Math.pow(n.x, 2) + Math.pow(n.y, 2);
+  if (nSquared > Math.pow(r, 2)) {
+    return null;
   }
-}
+  var d = n.length();
+  if (d !== 0) {
+    //var penetration = r - d;
+    var normal = Vector.divide(n, d)
+  } else {
+    //var penetration = a.radius;
+    var normal = new Vector(1, 0);
+  }
+  return new Collision(a, b, null, normal);
+};
 
 /**
  * Pair (of objects)
@@ -71,6 +50,22 @@ function Pair(a, b) {
   this.a = a;
   this.b = b;
 }
+
+/**
+ * Obtains all the possible collisions.
+ * @param pairs - All the possible pairs of objects.
+ * @returns {Array} - The possible collisions.
+ */
+Pair.obtainCollisions = function (pairs) {
+  var collisions = [];
+  pairs.map(function (pair) {
+    var collision = Collision.circleVsCircle(pair);
+    if (collision) {
+      collisions.push(collision);
+    }
+  });
+  return collisions;
+};
 
 /**
  * State
@@ -94,38 +89,21 @@ function State() {
    */
   this.update = function (dt) {
     var pairs = generatePairs(this.bodies);
-    var collisions = obtainCollisions(pairs);
+    var collisions = Pair.obtainCollisions(pairs);
     var gravity = this.gravity;
     var deltaRadius = this.deltaRadius;
 
-    collisions.map(function(collision){
+    collisions.map(function (collision) {
       collision.a.resolveCollisionWith(collision.b, collision.normal);
     });
 
-    this.bodies.map(function(body){
+    this.bodies.map(function (body) {
       body.applyGravity(gravity);
       body.updatePosition(dt);
-      if(body.radius + deltaRadius > 0) {
+      if (body.radius + deltaRadius > 0) {
         body.updateRadius(deltaRadius);
       }
     });
     return this;
   }
 }
-
-/**
- * Obtains all the possible collisions.
- * @param pairs - All the possible pairs of objects.
- * @returns {Array} - The possible collisions.
- */
-var obtainCollisions = function(pairs){
-  var collisions = [];
-  pairs.map(function(pair){
-    var collision = new Collision(pair.a, pair.b, null, null);
-    var collided = collision.circleVsCircle();
-    if (collided) {
-      collisions.push(collision);
-    }
-  });
-  return collisions;
-};

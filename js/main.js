@@ -5,20 +5,22 @@
  */
 require.config({
   paths: {
-    d3: '../ext/d3/d3.min',
+    app: 'app',
     bootstrap: '../ext/bootstrap/dist/js/bootstrap.min',
+    d3: '../ext/d3/d3.min',
     jquery: '../ext/jquery/dist/jquery.min',
-    rx: '../ext/rxjs/dist/rx.all.min',
+    monet: '../ext/monet/src/main/javascript/monet',
     physics: 'physics',
+    rx: '../ext/rxjs/dist/rx.all.min',
     shapes: 'shapes',
     time: 'time',
     utils: 'utils',
-    view: 'view',
-    app: 'app'
+    vector: 'vector',
+    view: 'view'
   },
   shim: {
     app: {
-      deps: ['utils', 'view', 'shapes', 'physics', 'time', 'rx', 'd3'],
+      deps: ['d3', 'monet', 'physics', 'rx', 'shapes', 'time', 'utils', 'vector', 'view'],
       exports: 'app'
     },
     bootstrap: {
@@ -33,6 +35,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(["app", "bootstrap", "d3", "jquery", "physics", "rx", "shapes", "time", "utils", "view"], function () {
+require(["app", "bootstrap", "d3", "jquery", "monet", "physics", "rx", "shapes", "time", "utils", "vector", "view"], function () {
   init();
 });

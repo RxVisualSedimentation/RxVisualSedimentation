@@ -23,8 +23,8 @@ function Circle(position, radius, velocity, restitution) {
    * @param normal - The vector of the general impulse for the entity.
    */
   this.resolveCollisionWith = function (entity, normal) {
-    var relativeVelocity = entity.velocity.minus(this.velocity);
-    var velocityAlongNormal = relativeVelocity.dotProduct(normal);
+    var relativeVelocity = Vector.subtract(entity.velocity, this.velocity);
+    var velocityAlongNormal = Vector.dotProduct(relativeVelocity, normal);
     if (velocityAlongNormal > 0) {
       return;
     }
@@ -35,35 +35,33 @@ function Circle(position, radius, velocity, restitution) {
     j /= 1 / this.mass + 1 / entity.mass;
 
     // Apply Impulse
-    var impulse = normal.multiply(j);
-    this.velocity = this.velocity.minus(impulse.multiply(1 / this.mass));
-    entity.velocity = entity.velocity.add(impulse.multiply(1 / entity.mass));
+    var impulse = Vector.multiply(normal, j);
+    this.velocity = Vector.subtract(this.velocity, Vector.multiply(impulse, (1 / entity.mass)));
+    entity.velocity = Vector.add(entity.velocity, Vector.multiply(impulse, (1 / entity.mass)));
   };
 
   /**
    * Update the velocity of the circle by applying gravity.
    * @param gravity - the gravity vector.
    */
-  this.applyGravity = function(gravity){
-    this.velocity = this.velocity.add(gravity);
+  this.applyGravity = function (gravity) {
+    this.velocity = Vector.add(this.velocity, gravity);
   };
 
   /**
    * Update the position of the circle.
    * @param dt - the change in time.
-   * @param gravity - the gravity vector.
    */
-  this.updatePosition = function(dt){
-
-    var distanceVector = this.velocity.multiply(dt);
-    this.position = this.position.add(distanceVector);
+  this.updatePosition = function (dt) {
+    var distanceVector = Vector.multiply(this.velocity, dt);
+    this.position = Vector.add(this.position, distanceVector);
   };
 
   /**
    * Update the radius of the circle.
    * @param delta_radius - the change in radius.
    */
-  this.updateRadius = function(delta_radius){
+  this.updateRadius = function (delta_radius) {
     this.radius += delta_radius;
   };
 }
