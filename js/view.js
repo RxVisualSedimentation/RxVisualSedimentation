@@ -2,7 +2,7 @@
 
 var svg;
 var w = 800,
-    h = 600;
+  h = 600;
 
 /**
  * Initialize the environment.
@@ -18,8 +18,8 @@ var initEnvironment = function () {
  */
 var redraw = function (state) {
   state.bodies
-    .filter(function (circle) {
-      return circle.drawn === false;
+    .filter(function (body) {
+      return body.drawn === false && body instanceof Circle;
     })
     .map(function (circle) {
       svg.append("circle").attr("r", circle.radius)
@@ -29,8 +29,37 @@ var redraw = function (state) {
         .attr("class", "ball");
       circle.drawn = true;
     });
-  
+
   state.bodies
+    .filter(function (body) {
+      return body.drawn === false && body instanceof Rectangle;
+    })
+    .map(function (rectangle) {
+      svg.append("rect")
+        .attr("x", rectangle.position.x)
+        .attr("y", rectangle.position.y)
+        .attr("width", rectangle.width)
+        .attr("height", rectangle.height)
+        .attr("id", "rectangle" + rectangle.id)
+        .attr("class", "rectangle");
+      rectangle.drawn = true;
+    });
+
+  state.bodies
+    .filter(function (body) {
+      return body instanceof Rectangle;
+    })
+    .map(function (rectangle) {
+      svg
+        .select("#rectangle" + rectangle.id)
+        .attr("x", rectangle.position.x)
+        .attr("y", rectangle.position.y);
+    });
+
+  state.bodies
+    .filter(function (body) {
+      return body instanceof Circle;
+    })
     .map(function (circle) {
       svg
         .select("#circle" + circle.id)

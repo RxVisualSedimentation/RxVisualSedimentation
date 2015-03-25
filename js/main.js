@@ -13,6 +13,7 @@ require.config({
     jquery: '../ext/jquery/dist/jquery.min',
     monet: '../ext/monet/src/main/javascript/monet',
     pair: 'physics/pair',
+    rectangle: 'shapes/rectangle',
     rx: '../ext/rxjs/dist/rx.all.min',
     state: 'physics/state',
     time: 'time',
@@ -22,7 +23,7 @@ require.config({
   },
   shim: {
     app: {
-      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rx', 'state', 'time', 'utils', 'vector', 'view'],
+      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'],
       exports: 'app'
     },
     bootstrap: {
@@ -37,6 +38,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
+require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
   init();
 });

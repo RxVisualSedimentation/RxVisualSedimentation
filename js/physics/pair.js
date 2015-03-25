@@ -18,8 +18,15 @@ function Pair(a, b) {
  */
 Pair.obtainCollisions = function (pairs) {
   var collisions = [];
+
   pairs.map(function (pair) {
-    var collision = Collision.circleVsCircle(pair);
+
+    var collision;
+    if (pair.a instanceof Circle && pair.b instanceof Circle) {
+      collision = Collision.circleVsCircle(pair);
+    } else if (pair.a instanceof Rectangle && pair.b instanceof Rectangle) {
+      collision = Collision.rectangleVsRectangle(pair);
+    }
     if (collision) {
       collisions.push(collision);
     }

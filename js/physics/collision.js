@@ -60,3 +60,46 @@ Collision.circleVsCircle = function (pair) {
     }
   return new Collision(a, b, null, normal);
 };
+
+/**
+ * Verifies whether a pair of bodies collide and returns an Collision.
+ * @param pair - a Pair of bodies
+ * @returns A collision or null.
+ */
+Collision.rectangleVsRectangle = function (pair) {
+  var a = pair.a;
+  var b = pair.b;
+  var n = Vector.subtract(b.position, a.position);
+
+  var a_extent = a.width / 2;
+  var b_extent = b.width / 2;
+
+  var x_overlap = a_extent + b_extent - Math.abs(n.x);
+
+  if( x_overlap > 0 ) {
+    a_extent = a.height / 2;
+    b_extent = a.height / 2;
+
+    var y_overlap = a_extent + b_extent - Math.abs( n.y );
+
+    if( y_overlap > 0) {
+      var normal;
+      if(x_overlap > y_overlap){
+        if(n.x < 0){
+          normal = new Vector( 0, -1 );
+        } else {
+          normal = new Vector( 0, 1 );
+        }
+        return new Collision(a, b, x_overlap, normal);
+      } else {
+        if(n.y < 0){
+          normal = new Vector( -1, 0 );
+        } else {
+          normal = new Vector( 1, 0 );
+        }
+        return new Collision(a, b, y_overlap, normal);
+      }
+    }
+  }
+  return null;
+};
