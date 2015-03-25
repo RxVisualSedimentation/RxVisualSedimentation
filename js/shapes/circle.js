@@ -19,26 +19,58 @@ function Circle(position, radius, velocity, restitution) {
 }
 
 /**
-   * Update the velocity of the circle by applying gravity.
-   * @param gravity - the gravity vector.
-   */
+ * Update the velocity of the circle by applying gravity.
+ * @param gravity - the gravity vector.
+ */
 Circle.prototype.applyGravity = function (gravity) {
   this.velocity = Vector.add(this.velocity, gravity);
 };
 
 /**
-   * Update the position of the circle.
-   * @param dt - the change in time.
-   */
+ * Update the position of the circle.
+ * @param dt - the change in time.
+ */
 Circle.prototype.updatePosition = function (dt) {
   var distanceVector = Vector.multiply(this.velocity, dt);
   this.position = Vector.add(this.position, distanceVector);
 };
 
 /**
-   * Update the radius of the circle.
-   * @param delta_radius - the change in radius.
-   */
+ * Update the radius of the circle.
+ * @param delta_radius - the change in radius.
+ */
 Circle.prototype.updateRadius = function (delta_radius) {
   this.radius += delta_radius;
 };
+
+/**
+ * Renders the SVG element of the circle.
+ */
+Circle.prototype.renderSVG = function () {
+  if (!this.drawn)
+    this.createSVG();
+  else
+    this.updateSVG();
+}
+
+/**
+ * Creates an SVG element for the circle.
+ */
+Circle.prototype.createSVG = function () {
+  svg.append("circle").attr("r", this.radius)
+    .attr("cx", this.position.x)
+    .attr("cy", this.position.y)
+    .attr("id", "circle" + this.id)
+    .attr("class", "ball");
+  this.drawn = true;
+}
+
+/**
+ * Updates an existing SVG element for the circle.
+ */
+Circle.prototype.updateSVG = function () {
+  svg.select("#circle" + this.id)
+    .attr("r", this.radius)
+    .attr("cx", this.position.x)
+    .attr("cy", this.position.y);
+}
