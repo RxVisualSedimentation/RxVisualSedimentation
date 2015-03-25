@@ -37,7 +37,7 @@ Collision.prototype.resolve = function () {
 }
 
 /**
- * Verifies whether a pair of bodies collide and returns an Collision.
+ * Verifies whether a pair of circles collide and returns a Collision.
  * @param a - Pair of bodies
  * @returns - A collision or null.
  */
@@ -62,7 +62,7 @@ Collision.circleVsCircle = function (pair) {
 };
 
 /**
- * Verifies whether a pair of bodies collide and returns an Collision.
+ * Verifies whether a pair of rectangles collide and returns a Collision.
  * @param pair - a Pair of bodies
  * @returns A collision or null.
  */
@@ -102,4 +102,48 @@ Collision.rectangleVsRectangle = function (pair) {
     }
   }
   return null;
+};
+
+/**
+ * Verifies whether a pair of a circle and a rectangle collide and returns a Collision.
+ * @param pair - a Pair of bodies
+ * @returns A collision or null.
+ */
+Collision.rectangleVsCircle = function (pair) {
+  var a = pair.a;
+  var b = pair.b;
+  var n = Vector.subtract(b.position, a.position);
+
+  var x_extent = a.width / 2;
+  var y_extent = a.height / 2;
+
+  var closest = new Vector(0,0);
+  closest.x = clamp( x_extent, n.x );
+  closest.y = clamp( y_extent, n.y );
+
+  var normal = n - closest;
+  var d = normal.length();
+  var r = b.radius;
+
+  if(d > r){
+    return false;
+  } else {
+    return new Collision(a, b, r + d, n);
+  }
+};
+
+var clamp = function ( extent, normal ) {
+  if(normal > 0) {
+    if(normal > extent ) {
+      return extent;
+    } else {
+      return normal;
+    }
+  } else {
+    if(Math.abs(normal) > extent) {
+      return -extent;
+    } else {
+      return normal;
+    }
+  }
 };
