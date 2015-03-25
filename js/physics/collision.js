@@ -19,13 +19,14 @@ function Collision(a, b, penetration, normal) {
   * Resolve the collision by adjusting the entities' properties.
   */
 Collision.prototype.resolve = function () {
-  var relativeVelocity = Vector.subtract(this.b.velocity, this.a.velocity);
-  var velocityAlongNormal = Vector.dotProduct(relativeVelocity, this.normal);
-  if (velocityAlongNormal > 0) {
-    return;
-  }
+    var relativeVelocity = Vector.subtract(this.b.velocity, this.a.velocity);
+    var velocityAlongNormal = Vector.dotProduct(relativeVelocity, this.normal);
+    if (velocityAlongNormal > 0) {
+      return;
+    }
   // Calculate the restitution.
   var e = Math.min(this.a.restitution, this.b.restitution);
+
   // Calculate the impulse scalar.
   var j = -(1 + e) * velocityAlongNormal;
   j /= 1 / this.a.mass + 1 / this.b.mass;
@@ -90,14 +91,14 @@ Collision.rectangleVsRectangle = function (pair) {
         } else {
           normal = new Vector( 0, 1 );
         }
-        return new Collision(a, b, x_overlap, normal);
+        return new Collision(a, b, null, normal);
       } else {
         if(n.y < 0){
           normal = new Vector( -1, 0 );
         } else {
           normal = new Vector( 1, 0 );
         }
-        return new Collision(a, b, y_overlap, normal);
+        return new Collision(a, b, null, normal);
       }
     }
   }
@@ -112,23 +113,29 @@ Collision.rectangleVsRectangle = function (pair) {
 Collision.rectangleVsCircle = function (pair) {
   var a = pair.a;
   var b = pair.b;
-  var n = Vector.subtract(b.position, a.position);
+
 
   var x_extent = a.width / 2;
   var y_extent = a.height / 2;
+
+  var n = Vector.subtract(b.position, a.position);
 
   var closest = new Vector(0,0);
   closest.x = clamp( x_extent, n.x );
   closest.y = clamp( y_extent, n.y );
 
-  var normal = n - closest;
+  var normal = Vector.subtract(n,closest);
   var d = normal.length();
   var r = b.radius;
+
 
   if(d > r){
     return false;
   } else {
-    return new Collision(a, b, r + d, n);
+    console.log(normal);
+    normal = Vector.divide(normal, d);
+    console.log(normal);
+    return new Collision(a, b, r + d, normal);
   }
 };
 

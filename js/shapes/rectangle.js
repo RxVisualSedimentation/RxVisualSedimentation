@@ -45,21 +45,21 @@ Rectangle.prototype.renderSVG = function () {
     this.createSVG();
   else
     this.updateSVG();
-}
+};
 
 /**
  * Creates an SVG element for the rectangle.
  */
 Rectangle.prototype.createSVG = function () {
   svg.append("rect")
-    .attr("x", this.position.x)
-    .attr("y", this.position.y)
+    .attr("x", this.position.x-this.width/2)
+    .attr("y", this.position.y-this.height/2)
     .attr("width", this.width)
     .attr("height", this.height)
     .attr("id", "rectangle" + this.id)
     .attr("class", "rectangle");
   this.drawn = true;
-}
+};
 
 /**
  * Updates an existing SVG element for the rectangle.
@@ -67,6 +67,6 @@ Rectangle.prototype.createSVG = function () {
 Rectangle.prototype.updateSVG = function () {
   svg
     .select("#rectangle" + this.id)
-    .attr("x", this.position.x)
-    .attr("y", this.position.y);
-}
+    .attr("x", this.position.x-this.width/2)
+    .attr("y", this.position.y-this.height/2);
+};

@@ -11,7 +11,7 @@ function initState() {
   state.addBody(new Rectangle(new Vector(2*w / 4, h / 3 + 10), 60, 30, new Vector(2, 0), 1));
   state.addBody(new Rectangle(new Vector(3*w / 4, h / 3 + 10), 60, 30, new Vector(-2, 0), 1));
   state.addBody(new Rectangle(new Vector(w / 4, h / 3), 60, 30, new Vector(0, 2), 1));
-  state.addBody(new Rectangle(new Vector(w / 4, 2.5*h / 3), 60, 30, new Vector(0, -2), 1));
+  state.addBody(new Rectangle(new Vector(w / 4, 2.5*h / 3), 60, 30, new Vector(0, -6), 1));
   return state;
 }
 
