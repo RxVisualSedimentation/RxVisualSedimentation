@@ -27,7 +27,7 @@ function State() {
     var deltaRadius = this.deltaRadius;
 
     collisions.map(function (collision) {
-      collision.a.resolveCollisionWith(collision.b, collision.normal);
+      collision.resolve();
     });
 
     this.bodies.map(function (body) {

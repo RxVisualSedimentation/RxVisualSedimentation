@@ -16,6 +16,27 @@ function Collision(a, b, penetration, normal) {
 }
 
 /**
+  * Resolve the collision by adjusting the entities' properties.
+  */
+Collision.prototype.resolve = function () {
+  var relativeVelocity = Vector.subtract(this.b.velocity, this.a.velocity);
+  var velocityAlongNormal = Vector.dotProduct(relativeVelocity, this.normal);
+  if (velocityAlongNormal > 0) {
+    return;
+  }
+  // Calculate the restitution.
+  var e = Math.min(this.a.restitution, this.b.restitution);
+  // Calculate the impulse scalar.
+  var j = -(1 + e) * velocityAlongNormal;
+  j /= 1 / this.a.mass + 1 / this.b.mass;
+
+  // Apply Impulse
+  var impulse = Vector.multiply(this.normal, j);
+  this.a.velocity = Vector.subtract(this.a.velocity, Vector.multiply(impulse, (1 / this.b.mass)));
+  this.b.velocity = Vector.add(this.b.velocity, Vector.multiply(impulse, (1 / this.b.mass)));
+}
+
+/**
  * Verifies whether a pair of bodies collide and returns an Collision.
  * @param a - Pair of bodies
  * @returns - A collision or null.
