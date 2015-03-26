@@ -2,7 +2,7 @@
 
 var svg;
 var w = 800,
-    h = 600;
+  h = 600;
 
 /**
  * Initialize the environment.
@@ -13,30 +13,13 @@ var initEnvironment = function () {
 };
 
 /**
- * Redraw the current state. Actually modify the svg elements.
+ * Redraw the current state. Actually modifies the svg elements.
  * @param state - Apply the changes of the given state in the current canvas.
  */
 var redraw = function (state) {
   state.bodies
-    .filter(function (circle) {
-      return circle.drawn === false;
-    })
-    .map(function (circle) {
-      svg.append("circle").attr("r", circle.radius)
-        .attr("cx", circle.position.x)
-        .attr("cy", circle.position.y)
-        .attr("id", "circle" + circle.id)
-        .attr("class", "ball");
-      circle.drawn = true;
-    });
-  
-  state.bodies
-    .map(function (circle) {
-      svg
-        .select("#circle" + circle.id)
-        .attr("r", circle.radius)
-        .attr("cx", circle.position.x)
-        .attr("cy", circle.position.y);
+    .map(function (body) {
+      body.renderSVG();
     });
 };
 
