@@ -6,14 +6,15 @@
  * @param radius - the radius of the circle.
  * @param velocity - the speed that the circle is travelling at.
  * @param restitution - the bounciness of the circle.
+ * @param mass - the mass of the circle.
  * @constructor
  */
-function Circle(position, radius, velocity, restitution) {
+function Circle(position, radius, velocity, restitution, mass) {
   this.drawn = false;
   this.id = nextBodyId();
   this.radius = radius;
   this.position = position;
-  this.mass = 1; //radius * radius * Math.PI;
+  this.mass = mass;
   this.velocity = velocity;
   this.restitution = restitution;
 }

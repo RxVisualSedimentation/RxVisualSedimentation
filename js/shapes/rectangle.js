@@ -5,17 +5,18 @@
  * @param position - vector of the bottom left corner position.
  * @param width - the width of the rectangle.
  * @param height - the height of the rectangle.
- * @param velocity - the speed that the circle is travelling at.
- * @param restitution - the bounciness of the circle.
+ * @param velocity - the speed that the rectangle is travelling at.
+ * @param restitution - the bounciness of the rectangle.
+ * @param mass - the rectangle of the circle.
  * @constructor
  */
-function Rectangle(position, width, height, velocity, restitution) {
+function Rectangle(position, width, height, velocity, restitution, mass) {
   this.drawn = false;
   this.id = nextBodyId();
   this.position = position;
   this.width = width;
   this.height = height;
-  this.mass = 1;
+  this.mass = mass;
   this.velocity = velocity;
   this.restitution = restitution;
 }

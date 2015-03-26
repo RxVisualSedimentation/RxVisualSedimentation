@@ -6,7 +6,7 @@
  */
 function State() {
   this.gravity = new Vector(0, 0.05);
-  this.deltaRadius = 0.02;
+  this.deltaRadius = -0.02;
   this.bodies = [];
   /**
    * Add bodies to the environment.
@@ -36,6 +36,13 @@ function State() {
       if (body.radius + deltaRadius > 0) {
         body.updateRadius(deltaRadius);
       }
+    });
+    this.bodies = this.bodies.filter(function (body) {
+      return !(body.position.x > 2*w  ||
+         body.position.x < -2*w ||
+         body.position.y > 2*h  ||
+         body.position.y < -2*h
+        );
     });
     return this;
   }

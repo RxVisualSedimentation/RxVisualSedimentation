@@ -33,7 +33,7 @@ Collision.prototype.resolve = function () {
 
   // Apply Impulse
   var impulse = Vector.multiply(this.normal, j);
-  this.a.velocity = Vector.subtract(this.a.velocity, Vector.multiply(impulse, (1 / this.b.mass)));
+  this.a.velocity = Vector.subtract(this.a.velocity, Vector.multiply(impulse, (1 / this.a.mass)));
   this.b.velocity = Vector.add(this.b.velocity, Vector.multiply(impulse, (1 / this.b.mass)));
 }
 
@@ -132,9 +132,7 @@ Collision.rectangleVsCircle = function (pair) {
   if(d > r){
     return false;
   } else {
-    console.log(normal);
     normal = Vector.divide(normal, d);
-    console.log(normal);
     return new Collision(a, b, r + d, normal);
   }
 };
