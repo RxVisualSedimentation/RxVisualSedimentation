@@ -5,8 +5,8 @@
  * @constructor
  */
 function State() {
-  this.gravity = new Vector(0, 0.05);
-  this.deltaRadius = -0.02;
+  this.gravity = new Vector(0, 0.1);
+  this.deltaRadius = 0;
   this.bodies = [];
   /**
    * Add bodies to the environment.

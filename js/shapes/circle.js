@@ -14,7 +14,7 @@ function Circle(position, radius, velocity, restitution, mass) {
   this.id = nextBodyId();
   this.radius = radius;
   this.position = position;
-  this.mass = mass;
+  this.inv_mass = mass;
   this.velocity = velocity;
   this.restitution = restitution;
 }

@@ -29,12 +29,12 @@ Collision.prototype.resolve = function () {
 
   // Calculate the impulse scalar.
   var j = -(1 + e) * velocityAlongNormal;
-  j /= 1 / this.a.mass + 1 / this.b.mass;
+  j /= this.a.inv_mass + this.b.inv_mass;
 
   // Apply Impulse
   var impulse = Vector.multiply(this.normal, j);
-  this.a.velocity = Vector.subtract(this.a.velocity, Vector.multiply(impulse, (1 / this.a.mass)));
-  this.b.velocity = Vector.add(this.b.velocity, Vector.multiply(impulse, (1 / this.b.mass)));
+  this.a.velocity = Vector.subtract(this.a.velocity, Vector.multiply(impulse, this.a.inv_mass));
+  this.b.velocity = Vector.add(this.b.velocity, Vector.multiply(impulse, this.b.inv_mass));
 }
 
 /**
@@ -79,7 +79,7 @@ Collision.rectangleVsRectangle = function (pair) {
 
   if( x_overlap > 0 ) {
     a_extent = a.height / 2;
-    b_extent = a.height / 2;
+    b_extent = b.height / 2;
 
     var y_overlap = a_extent + b_extent - Math.abs( n.y );
 
@@ -91,14 +91,14 @@ Collision.rectangleVsRectangle = function (pair) {
         } else {
           normal = new Vector( 0, 1 );
         }
-        return new Collision(a, b, null, normal);
+        return new Collision(a, b, x_overlap, normal);
       } else {
         if(n.y < 0){
           normal = new Vector( -1, 0 );
         } else {
           normal = new Vector( 1, 0 );
         }
-        return new Collision(a, b, null, normal);
+        return new Collision(a, b, y_overlap, normal);
       }
     }
   }
