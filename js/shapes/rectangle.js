@@ -16,7 +16,7 @@ function Rectangle(position, width, height, velocity, restitution, mass) {
   this.position = position;
   this.width = width;
   this.height = height;
-  this.mass = mass;
+  this.inv_mass = mass !== 0 ? 1/mass : 0;
   this.velocity = velocity;
   this.restitution = restitution;
 }
@@ -26,7 +26,9 @@ function Rectangle(position, width, height, velocity, restitution, mass) {
  * @param gravity - the gravity vector.
  */
 Rectangle.prototype.applyGravity = function (gravity) {
-  this.velocity = Vector.add(this.velocity, gravity);
+  if(this.inv_mass!==0){
+    this.velocity = Vector.add(this.velocity, gravity);
+  }
 };
 
 /**

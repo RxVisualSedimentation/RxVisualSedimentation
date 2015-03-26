@@ -41,7 +41,7 @@ var unsubscribeFromClock = function () {
 var clockInit = function () {
   clock = Rx.Observable.timer(
     0, /* 0 seconds */
-    10 /* 25 ms */
+    20 /* 25 ms */
   );
 };
 
