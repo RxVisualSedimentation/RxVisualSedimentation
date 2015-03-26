@@ -29,7 +29,7 @@ Collision.prototype.resolve = function () {
 
   // Calculate the impulse scalar.
   var j = -(1 + e) * velocityAlongNormal;
-  j /= this.a.inv_mass + this.b.inv_mass;
+  j /= (this.a.inv_mass + this.b.inv_mass);
 
   // Apply Impulse
   var impulse = Vector.multiply(this.normal, j);
@@ -124,14 +124,39 @@ Collision.rectangleVsCircle = function (pair) {
   closest.x = clamp( x_extent, n.x );
   closest.y = clamp( y_extent, n.y );
 
+  var inside = false;
+
+  if(n.equals(closest)){
+    inside = true;
+    if(Math.abs(n.x) > Math.abs(n.y)){
+      if(closest.x > 0)
+        closest.x = x_extent;
+      else
+        closest.x = -x_extent;
+    }
+    // y axis is shorter
+    else {
+      if(closest.y > 0)
+        closest.y = y_extent;
+      else
+        closest.y = -y_extent;
+    }
+  }
+
   var normal = Vector.subtract(n,closest);
   var d = normal.length();
   var r = b.radius;
 
 
-  if(d > r){
+  if(d > r && !inside){
     return false;
-  } else {
+  }
+
+  if(inside){
+    normal = Vector.multiply(Vector.divide(normal, d), -1);
+    return new Collision(a, b, r + d, normal);
+  }
+  else {
     normal = Vector.divide(normal, d);
     return new Collision(a, b, r + d, normal);
   }

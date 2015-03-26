@@ -63,3 +63,12 @@ Vector.divide = function (v, factor) {
 Vector.dotProduct = function (v1, v2) {
   return v1.x * v2.x + v1.y * v2.y;
 }
+
+/**
+ * Checks whether two vectors are equal.
+ * @param v2 - The second vector
+ * @returns - whether two vectors are equal.
+ */
+Vector.prototype.equals = function (v) {
+  return this.x == v.x && this.y == v.y;
+}
