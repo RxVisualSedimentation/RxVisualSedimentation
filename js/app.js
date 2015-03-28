@@ -30,7 +30,7 @@ function initState() {
  */
 var init = function () {
   initButtons();
-  clockInit();
-  initClockSubscription();
+  initClockObversable();
+  initStateObservable();
   initEnvironment();
 };

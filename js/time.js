@@ -1,17 +1,17 @@
 "use strict";
 
-var clock;
-var clockSubscription;
-var clockSubscriber;
+var clockObservable;
+var stateObservable;
+var clockObserver;
 
 /**
  * Subscribe to the clock subscription.
  */
-var subscribeToClock = function () {
-  if(clockSubscriber != null) {
+var subscribeToClockObservable = function () {
+  if(clockObserver != null) {
     return;
   }
-  clockSubscriber = clockSubscription
+  clockObserver = stateObservable
     .subscribe(
       function (s) {
         redraw(s);
@@ -28,18 +28,18 @@ var subscribeToClock = function () {
 /**
  * Unsubscribe from the clock subscription.
  */
-var unsubscribeFromClock = function () {
-  if(clockSubscriber != null) {
-    clockSubscriber.dispose();
-    clockSubscriber = null;
+var unsubscribeFromClockObservable = function () {
+  if(clockObserver != null) {
+    clockObserver.dispose();
+    clockObserver = null;
   }
 };
 
 /**
  * Initialize the clock observable.
  */
-var clockInit = function () {
-  clock = Rx.Observable.timer(
+var initClockObversable = function () {
+  clockObservable = Rx.Observable.timer(
     0, /* 0 seconds */
     20 /* 25 ms */
   );
@@ -48,9 +48,9 @@ var clockInit = function () {
 /**
  * Initialize the clock subscription.
  */
-var initClockSubscription = function () {
-  clockSubscription =
-    clock
+var initStateObservable = function () {
+  stateObservable =
+    clockObservable
       .map(function () {
         return 1;
       })
