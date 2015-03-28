@@ -6,7 +6,7 @@
  */
 function initState() {
   var state = new State();
-  var amount = 50;
+  var amount = 10;
   var maxSpeed = 1;
   var size = 0;
   var restitution = 0.7;

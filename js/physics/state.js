@@ -6,7 +6,7 @@
  */
 function State() {
   this.gravity = new Vector(0, 0.1);
-  this.deltaRadius = 0;
+  this.deltaRadius = -0.05;
   this.bodies = [];
   /**
    * Add bodies to the environment.
@@ -20,7 +20,14 @@ function State() {
    * @param dt - delta time.
    * @returns {State} - The updated state.
    */
-  this.update = function (dt) {
+  this.update = function (dt,tweets) {
+    if (tweets != null){
+      if (tweets.length > 0) {
+        console.log("Tweets: " + tweets.toString());
+        var r = Math.random();
+        this.addBody(new Circle(new Vector(w / 2, (h/2) - 200), 25, new Vector(1.5*r, 0.5), 0.7, 1));
+      }
+    }
     var pairs = generatePairs(this.bodies);
     var collisions = Pair.obtainCollisions(pairs);
     var gravity = this.gravity;
