@@ -33,7 +33,7 @@ var subscribeToClockObservable = function () {
  * Subscribe to the clock subscription.
  */
 var subscribeToTweets = function () {
-  clock.filter(function(t){
+  clockObservable.filter(function(t){
     return t%5 === 0;
   }).subscribe(function (s) {
       $.ajax( "http://localhost:3000/tweets/get" )
