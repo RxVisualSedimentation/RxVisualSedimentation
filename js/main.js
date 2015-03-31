@@ -5,7 +5,7 @@
  */
 require.config({
   paths: {
-    app: 'app',
+    rxvs: 'rxvs',
     bootstrap: '../ext/bootstrap/dist/js/bootstrap.min',
     circle: 'shapes/circle',
     collision: 'physics/collision',
@@ -22,9 +22,9 @@ require.config({
     view: 'view'
   },
   shim: {
-    app: {
+    rxvs: {
       deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'],
-      exports: 'app'
+      exports: 'rxvs'
     },
     bootstrap: {
       deps: ['jquery']
@@ -38,6 +38,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
+require(['rxvs', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
   init();
 });
