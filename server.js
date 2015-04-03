@@ -1,10 +1,13 @@
 var express         = require('express'),
   WebSocketServer   = require('websocket').server,
-  http              = require('http'),
+  http              = require('http'),  
+  Twitter           = require('twitter'),
   logger            = require('morgan'),
   bodyParser        = require('body-parser'),
-  colors            = require('colors'),
+  colors            = require('colors'),    
   app               = express();
+
+var twitterCredentials = require('./config/twitterCredentials.js');
 
 colors.setTheme({
   input: 'grey',
@@ -36,6 +39,8 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + "/websocket.html");
 });
 
+var client = new Twitter(twitterCredentials);
+
 var server = http.createServer(app);
 server.listen(3000, function () {
   console.log((new Date()) + ' Server is listening on port 3000');
@@ -57,12 +62,21 @@ wsServer.on('request', function (request) {
     return;
   }
 
-  var connection = request.accept('echo-protocol', request.origin);
+  var connection = request.accept('twitter-protocol', request.origin);
   console.log((new Date())+ " " + connection.remoteAddress + ' Connection accepted.'.green);
+  
+  client.stream('statuses/filter', {track: 'software'}, function(stream) {
+    stream.on('data', function(tweet) {
+      connection.sendUTF(JSON.stringify(tweet));
+    });
+    stream.on('error', function(error) {
+      console.log(error.toString().error);
+    });
+  });
+  
   connection.on('message', function (message) {
     if (message.type === 'utf8') {
-      console.log('Received Message: ' + message.utf8Data);
-      connection.sendUTF('reply: ' + message.utf8Data);
+      console.log('Received Message: '.info + message.utf8Data.info);
     }
   });
 

@@ -5,7 +5,7 @@ $(function () {
   
   window.WebSocket = window.WebSocket || window.MozWebSocket;
   
-  var connection = new WebSocket('ws://127.0.0.1:3000/', 'echo-protocol');
+  var connection = new WebSocket('ws://127.0.0.1:3000/', 'twitter-protocol');
   
   if (!window.WebSocket) {
     console.log("Your browser does not support websockets");
@@ -14,7 +14,6 @@ $(function () {
   
   connection.onopen = function () {
     console.log("Connection succesfully opened");
-    connection.send("testje");
   }
   
   connection.onerror = function (error) { 
@@ -23,7 +22,13 @@ $(function () {
   }
   
   connection.onmessage = function (message) {
-    console.log("message received: " + message.data);
+    try {
+      var tweet = JSON.parse(message.data);
+    } catch (e) {
+      console.log('This doesn\'t look like a valid JSON: ', message.data);
+      return;
+    }
+    console.log(tweet.created_at + " - " + tweet.user.name);
   }
   
   input.keydown(function(e) {
