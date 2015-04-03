@@ -54,17 +54,27 @@ function State() {
  */
 State.init = function () {
   var state = new State();
-  var amount = 50;
-  var maxSpeed = 1;
-  var size = 0;
-  var restitution = 0.7;
-  for(var i = 1; i<= amount; i++){
-    var x = maxSpeed*(Math.random()-0.5);
-    var y = maxSpeed*(Math.random()-0.5);
-    var r = Math.random();
-    state.addBody(new Circle(new Vector(i* (w/amount), r*h), i, new Vector(x, y), restitution, 1));
-  }
-  //state.addBody(new Circle(new Vector(w/2, h-60), size, new Vector(0, 0), restitution, 1));
+  
+  var tweetObserver = new TweetObservable().subscribe(
+    function (message) {
+      try {
+        var tweet = JSON.parse(message.data);
+      } catch (e) {
+        console.log('This doesn\'t look like a valid JSON: ', message.data);
+        return;
+      }
+      console.log(tweet.created_at + " - " + tweet.user.name);
+      state.addBody(new Circle(new Vector(w/4, h/4), 10, new Vector(4, -2.5), 0.7, 1));
+    },
+    function (error) {
+      console.log("Error occurred: ");
+      console.log(error.toString());
+    },
+    function () {
+      console.log('Completed');
+    }
+  );   
+  
   var indent = 10;
   state.addBody(new Rectangle(new Vector(-h/2 + indent, h/2), h, h-2*indent, new Vector(0, 0), 1, 0)); // Left wall
   state.addBody(new Rectangle(new Vector(w + h/2 - indent, h/2), h, h-2*indent, new Vector(0, 0), 1, 0)); // Right wall

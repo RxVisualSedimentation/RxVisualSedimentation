@@ -1,4 +1,4 @@
-var initTweetObservable = function () {
+function TweetObservable() {
   var connection = initWebsocket();
   
   connection.onopen = function () {
@@ -6,7 +6,7 @@ var initTweetObservable = function () {
   }
 
   //The function given as parameter to create will only get executed when subscribe is called on tweetObservable.
-  var tweetObservable = Rx.Observable.create(function (observer) {
+  return Rx.Observable.create(function (observer) {
     connection.onmessage = function (message) {
       observer.onNext(message);
     }
@@ -18,26 +18,7 @@ var initTweetObservable = function () {
     connection.onclose = function () {
       observer.onCompleted();
     }
-  });
-
-  tweetObservable.subscribe(
-    function (message) {
-      try {
-        var tweet = JSON.parse(message.data);
-      } catch (e) {
-        console.log('This doesn\'t look like a valid JSON: ', message.data);
-        return;
-      }
-      console.log(tweet.created_at + " - " + tweet.user.name);
-    },
-    function (error) {
-      console.log("Error occurred: ");
-      console.log(error.toString());
-    },
-    function () {
-      console.log('Completed');
-    }
-  );  
+  }); 
 }
 
 var initWebsocket = function () {
@@ -49,20 +30,5 @@ var initWebsocket = function () {
     console.log("Your browser does not support websockets");
     return;
   }
-  return connection;
-  
+  return connection;  
 }
-
-
-
-//  input.keydown(function(e) {
-//    if (e.keyCode === 13) {
-//      var msg = $(this).val();
-//      if (!msg) {
-//        return;
-//      }
-//      // send the message as an ordinary text
-//      connection.send(msg.toString());
-//      $(this).val('');
-//    }
-//  });

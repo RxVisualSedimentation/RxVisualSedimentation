@@ -8,5 +8,4 @@ var init = function () {
   initClockObversable();
   initStateObservable();
   initEnvironment();
-  initTweetObservable();
 };
