@@ -19,14 +19,18 @@ require.config({
     time: 'time',
     utils: 'utils',
     vector: 'physics/vector',
-    view: 'view'
+    view: 'view',
+    websocket: 'websocket'
   },
   shim: {
     app: {
-      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'],
+      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view', 'websocket'],
       exports: 'app'
     },
     bootstrap: {
+      deps: ['jquery']
+    },
+    websocket: {
       deps: ['jquery']
     },
     jquery: {
@@ -38,6 +42,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
+require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view', 'websocket'], function () {
   init();
 });
