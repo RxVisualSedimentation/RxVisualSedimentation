@@ -8,5 +8,5 @@ var init = function () {
   initClockObversable();
   initStateObservable();
   initEnvironment();
-  initWebsocket();
+  initTweetObservable();
 };

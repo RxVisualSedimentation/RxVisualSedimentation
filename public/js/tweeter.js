@@ -1,13 +1,6 @@
-var initWebsocket = function () {
-  window.WebSocket = window.WebSocket || window.MozWebSocket;
-
-  var connection = new WebSocket('ws://127.0.0.1:3000/', 'twitter-protocol');
-
-  if (!window.WebSocket) {
-    console.log("Your browser does not support websockets");
-    return;
-  }
-
+var initTweetObservable = function () {
+  var connection = initWebsocket();
+  
   connection.onopen = function () {
     console.log("Connection succesfully opened");
   }
@@ -43,7 +36,21 @@ var initWebsocket = function () {
     },
     function () {
       console.log('Completed');
-    });
+    }
+  );  
+}
+
+var initWebsocket = function () {
+  window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+  var connection = new WebSocket('ws://127.0.0.1:3000/', 'twitter-protocol');
+
+  if (!window.WebSocket) {
+    console.log("Your browser does not support websockets");
+    return;
+  }
+  return connection;
+  
 }
 
 
