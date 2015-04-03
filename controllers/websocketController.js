@@ -8,14 +8,15 @@ module.exports.init = function (server, twitterClient) {
 
     var connection = request.accept('twitter-protocol', request.origin);
     console.log(new Date().toString().grey+ " " + connection.remoteAddress + ' Connection accepted.'.green);
-
-    twitterClient.stream('statuses/filter', {track: 'software'}, function(stream) {
+    var currentStream;
+    twitterClient.stream('statuses/filter', {track: 'obama'}, function(stream) {
       stream.on('data', function(tweet) {
         connection.sendUTF(JSON.stringify(tweet));
       });
       stream.on('error', function(error) {
-        console.log(error.toString().error);
+        console.log(error);
       });
+      currentStream = stream;
     });
 
     connection.on('message', function (message) {
@@ -25,6 +26,7 @@ module.exports.init = function (server, twitterClient) {
     });
 
     connection.on('close', function (reasonCode, description) {
+      currentStream.destroy();
       console.log(new Date().toString().grey + " "+ connection.remoteAddress + ' Disconnected.'.yellow);
     });
   });
