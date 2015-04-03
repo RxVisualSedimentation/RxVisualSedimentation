@@ -54,7 +54,7 @@ var initStateObservable = function () {
       .map(function () {
         return 1;
       })
-      .scan(initState(), function (state, dt) {
+      .scan(State.init(), function (state, dt) {
         return state.update(dt);
       });
 };
