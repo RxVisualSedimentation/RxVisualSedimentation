@@ -6,14 +6,14 @@
     "Martin Jorn Rogalla <martin@martinrogalla.com>",
     "Joop Aué <joopaue@gmail.com>"
   ],
-  "main": "js/app.js",
+  "main": "public/js/app.js",
   "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "/ext",
+    "public/ext",
     "test",
     "tests"
   ],
