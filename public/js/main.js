@@ -17,16 +17,20 @@ require.config({
     rx: '../ext/rxjs/dist/rx.all.min',
     state: 'physics/state',
     time: 'time',
+    tweeter: 'tweeter',
     utils: 'utils',
     vector: 'physics/vector',
     view: 'view'
   },
   shim: {
     app: {
-      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'],
+      deps: ['d3', 'circle', 'collision', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'tweeter', 'utils', 'vector', 'view'],
       exports: 'app'
     },
     bootstrap: {
+      deps: ['jquery']
+    },
+    websocket: {
       deps: ['jquery']
     },
     jquery: {
@@ -38,6 +42,6 @@ require.config({
 /**
  * Run require.js to actually include all the libraries.
  */
-require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'utils', 'vector', 'view'], function () {
+require(['app', 'bootstrap', 'circle', 'collision', 'd3', 'jquery', 'monet', 'pair', 'rectangle', 'rx', 'state', 'time', 'tweeter', 'utils', 'vector', 'view'], function () {
   init();
 });
