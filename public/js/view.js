@@ -27,7 +27,7 @@ var redraw = function (state) {
  * Initialize all the buttons on the page.
  */
 var initButtons = function () {
-  createEventObservable(document.getElementById('subscribeClock'), 'click')
+  Rx.Observable.fromEvent($('#subscribeClock'), 'click')
     .subscribe(
       function (evt) {
         $('#subscribeClock').addClass('disabled');
@@ -38,10 +38,11 @@ var initButtons = function () {
         console.log('error: ' + err);
       },
       function () {
-        console.log("complete");
+        console.log("completed subscribe to clock");
       }
     );
-  createEventObservable(document.getElementById("unsubscribeClock"), 'click')
+  
+  Rx.Observable.fromEvent($('#unsubscribeClock'), 'click')
     .subscribe(
       function (evt) {
         unsubscribeFromClockObservable();
@@ -52,7 +53,7 @@ var initButtons = function () {
         console.log('error: ' + err);
       },
       function () {
-        console.log("complete");
+        console.log("completed unsubscribe to clock");
       }
     );
 };
