@@ -87,7 +87,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 # External Dependencies (run `bower install` to install these)
-ext/
+public/ext/
 
 # Twitter credentials
 config/twitterCredentials.js

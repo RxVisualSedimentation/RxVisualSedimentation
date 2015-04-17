@@ -18,19 +18,93 @@
       <p>Visual sedimentation implemented in RxJS.</p>
     </div>
     <div class="row">
-      <div class="col-md-12">
-        <div id="environment" class="center-block">
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-2">
         <div class="panel panel-default">
           <div class="panel-heading">Clock controls</div>
           <div class="panel-body">
-            <a id="subscribeClock" class="btn btn-primary" type="button">Subscribe</a>
-            <a id="unsubscribeClock" class="btn btn-primary disabled">Unsubscribe</a>
+            <div class="col-md-12">
+              <p>
+                <a id="subscribeClock" class="btn btn-success btn-block" type="button"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</a>
+              </p>
+              <p>
+                <a id="unsubscribeClock" class="btn btn-danger btn-block disabled"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</a>
+              </p>
+            </div>
           </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">Settings</div>
+          <div class="panel-body">
+            <label for="gravityX">Gravity x-axis</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a id="gravityX-dec" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span>
+              </a>
+              </span>
+              <input type="text" class="form-control input-sm text-center" id="gravityX" value="0">
+              <span class="input-group-btn">
+                <a id="gravityX-inc"type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              </span>
+            </div>
+
+            <label for="gravityY">Gravity y-axis</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a id="gravityY-dec" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span>
+              </a>
+              </span>
+              <input type="text" class="form-control input-sm text-center" id="gravityY" value="0.1">
+              <span class="input-group-btn">
+                <a id="gravityY-inc" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              </span>
+            </div>
+
+            <label for="size">Size</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a id="size-dec" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span>
+              </a>
+              </span>
+              <input type="text" class="form-control input-sm text-center" id="size" value="10">
+              <span class="input-group-btn">
+                <a id="size-inc" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              </span>
+            </div>
+
+
+            <label for="restitution">Restitution</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a id="restitution-dec" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span>
+              </a>
+              </span>
+              <input type="text" class="form-control input-sm text-center" id="restitution" value="0.7">
+              <span class="input-group-btn">
+                <a id="restitution-inc" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              </span>
+            </div>
+
+            <label for="shrinking">Shrinking</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <a id="shrinking-dec" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-minus"></span>
+              </a>
+              </span>
+              <input type="text" class="form-control input-sm text-center" id="shrinking" value="0">
+              <span class="input-group-btn">
+                <a id="shrinking-inc" type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus"></span>
+              </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10">
+        <div id="environment" class="center-block">
         </div>
       </div>
     </div>

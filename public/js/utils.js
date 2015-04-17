@@ -3,28 +3,6 @@
 var bodyId;
 
 /**
- * Create an observable for the given element which has the given events.
- * @param element - Create the observable for this element.
- * @param eventType - The element should emit these type of events.
- * @returns {Rx.Observable<T>} - The resulting observable.
- */
-var createEventObservable = function (element, eventType) {
-  return Rx.Observable.create(function (observer) {
-
-    var eventHandler = function (eventObj) {
-      observer.onNext(eventObj);
-    };
-    //adds event listener to the element.
-    element.addEventListener(eventType, eventHandler);
-
-    //on dispose
-    return function () {
-      element.removeEventListener(eventType, eventHandler);
-    };
-  });
-};
-
-/**
  * Creates all possible pairs of bodies.
  * @param bodies - All the bodies in the environment.
  * @returns {Array} - All Possible Pairs without duplicates.

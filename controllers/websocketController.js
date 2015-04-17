@@ -13,7 +13,6 @@ module.exports.init = function (server, twitterClient) {
 
     connection = request.accept('twitter-protocol', request.origin);
     console.log(new Date().toString().grey+ " " + connection.remoteAddress + ' Connection accepted.'.green);
-
     connection.on('message', function (message) {
       if (message.type === 'utf8') {
         console.log('Received Message: '.info + message.utf8Data.info);
