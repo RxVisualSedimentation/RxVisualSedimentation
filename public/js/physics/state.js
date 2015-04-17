@@ -6,7 +6,7 @@
  */
 function State() {
   this.gravity = new Vector(0, 0.3);
-  this.deltaRadius = -0.001;
+  this.deltaRadius = 0;
   this.bodies = [];
   this.topics = [];
   this.emitters = [];
@@ -229,7 +229,7 @@ State.init = function () {
       var vx = dx/10;
       var vy = dy/10;
       state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1));
-      console.log("Circle added at positition (" + coordinates.x + ", " + coordinates.y + ") with velocity: (" + vx + ", " + vy + ")" );  
+      console.log("Circle added at positition (" + coordinates.down.x + ", " + coordinates.down.y + ") with velocity: (" + vx + ", " + vy + ")" );  
     },
     function (err) {
       console.log('error: ' + err);
