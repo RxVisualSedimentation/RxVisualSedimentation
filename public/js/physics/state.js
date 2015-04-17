@@ -234,7 +234,7 @@ State.init = function () {
       state.emitters.filter(function (emitter) {
         return emitter.topic == tweet.topic;
       }).forEach(function (emitter) {
-        state.addBody(new Circle(emitter.position, size, emitter.velocity, restitution, 1, emitter.color));
+        state.addBody(new Circle(emitter.position, size, emitter.velocity, restitution, size, emitter.color));
       });
     },
     function (error) {

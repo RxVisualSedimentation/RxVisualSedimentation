@@ -18,6 +18,8 @@ function Circle(position, radius, velocity, restitution, mass, color) {
   this.velocity = velocity;
   this.restitution = restitution;
   this.color = color;
+  this.initialMass = mass;
+  this.initialRadius = radius;
 }
 
 /**
@@ -43,6 +45,7 @@ Circle.prototype.updatePosition = function (dt) {
  */
 Circle.prototype.updateRadius = function (delta_radius) {
   this.radius += delta_radius;
+  this.inv_mass = this.inv_mass !==0 ? 1/(this.initialMass*(this.radius/this.initialRadius)) : 0;
 };
 
 /**

@@ -37,7 +37,7 @@ var initWebsocket = function () {
 
 var messageAction1 = {
   "action": "subscribe_topic",
-  "payload": "Twitter"
+  "payload": "Software"
 };
 var messageAction2 = {
   "action": "subscribe_topic",
