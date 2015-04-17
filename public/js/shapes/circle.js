@@ -9,7 +9,7 @@
  * @param mass - the mass of the circle.
  * @constructor
  */
-function Circle(position, radius, velocity, restitution, mass) {
+function Circle(position, radius, velocity, restitution, mass, color) {
   this.drawn = false;
   this.id = nextBodyId();
   this.radius = radius;
@@ -17,6 +17,7 @@ function Circle(position, radius, velocity, restitution, mass) {
   this.inv_mass = mass !==0 ? 1/mass : 0;
   this.velocity = velocity;
   this.restitution = restitution;
+  this.color = color;
 }
 
 /**
@@ -62,8 +63,17 @@ Circle.prototype.createSVG = function () {
     .attr("cx", this.position.x)
     .attr("cy", this.position.y)
     .attr("id", "circle" + this.id)
-    .attr("class", "ball");
+    .attr("class", "ball")
+    .style("fill", this.color);;
   this.drawn = true;
+}
+
+/**
+ * Destroy an SVG element for the circle.
+ */
+Circle.prototype.destroySVG = function () {
+  svg.select("#circle" + this.id).remove();
+  this.drawn = false;
 }
 
 /**

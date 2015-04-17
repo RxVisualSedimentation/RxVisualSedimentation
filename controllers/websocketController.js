@@ -1,4 +1,9 @@
+var connection;
+var topicStreams = [];
+var twitter;
+
 module.exports.init = function (server, twitterClient) {
+  twitter = twitterClient;
   server.on('request', function (request) {
     if (!originIsAllowed(request.origin)) {
       request.reject();
@@ -6,31 +11,63 @@ module.exports.init = function (server, twitterClient) {
       return;
     }
 
-    var connection = request.accept('twitter-protocol', request.origin);
+    connection = request.accept('twitter-protocol', request.origin);
     console.log(new Date().toString().grey+ " " + connection.remoteAddress + ' Connection accepted.'.green);
-    var currentStream;
-    twitterClient.stream('statuses/filter', {track: 'obama'}, function(stream) {
-      stream.on('data', function(tweet) {
-        connection.sendUTF(JSON.stringify(tweet));
-      });
-      stream.on('error', function(error) {
-        console.log(error);
-      });
-      currentStream = stream;
-    });
 
     connection.on('message', function (message) {
       if (message.type === 'utf8') {
         console.log('Received Message: '.info + message.utf8Data.info);
+        parseActions(message.utf8Data);
       }
     });
 
     connection.on('close', function (reasonCode, description) {
-      currentStream.destroy();
+      topicStreams.forEach(function (stream){
+        stream.destroy();
+      });
       console.log(new Date().toString().grey + " "+ connection.remoteAddress + ' Disconnected.'.yellow);
     });
   });
 };
+
+var parseActions = function(message){
+  var actionMessage = JSON.parse(message);
+  var clientAddress = connection.remoteAddress;
+  switch (actionMessage.action) {
+    case 'subscribe_topic':
+      console.log("Subscribing client(".info + clientAddress + ") to topic stream '".info + actionMessage.payload.yellow + "'.".info);
+      subscribeTopic(actionMessage.payload);
+      break;
+    case "unsubscribe_topic":
+      console.log("Unsubscribing client(".info + clientAddress + ") from topic stream '".info + actionMessage.payload.yellow + "'.".info);
+      unsubscribeTopic(actionMessage.payload);
+      break;
+  }
+}
+
+var subscribeTopic = function(topic){
+  var currentStream = null;
+  twitter.stream('statuses/filter', {track: topic}, function(stream) {
+    stream.on('data', function(tweet) {
+      tweet.topic = topic;
+      connection.sendUTF(JSON.stringify(tweet));
+    });
+    stream.on('error', function(error) {
+      console.log(error);
+    });
+    currentStream = stream;
+  });
+  currentStream.topic = topic;
+  topicStreams.push(currentStream);
+}
+
+var unsubscribeTopic = function(topic){
+  topicStreams.filter(function(stream){
+    return stream.topic === topic;
+  }).forEach(function(stream){
+    stream.destroy;
+  })
+}
 
 function originIsAllowed(origin) {
   return "http://localhost:3000" === origin;
