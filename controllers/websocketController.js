@@ -1,4 +1,3 @@
-var connection;
 var topicStreams = [];
 var twitter;
 
@@ -11,12 +10,12 @@ module.exports.init = function (server, twitterClient) {
       return;
     }
 
-    connection = request.accept('twitter-protocol', request.origin);
+    var connection = request.accept('twitter-protocol', request.origin);
     console.log(new Date().toString().grey+ " " + connection.remoteAddress + ' Connection accepted.'.green);
     connection.on('message', function (message) {
       if (message.type === 'utf8') {
         console.log('Received Message: '.info + message.utf8Data.info);
-        parseActions(message.utf8Data);
+        parseActions(message.utf8Data, connection);
       }
     });
 
@@ -29,22 +28,22 @@ module.exports.init = function (server, twitterClient) {
   });
 };
 
-var parseActions = function(message){
+var parseActions = function(message, connection){
   var actionMessage = JSON.parse(message);
   var clientAddress = connection.remoteAddress;
   switch (actionMessage.action) {
     case 'subscribe_topic':
       console.log("Subscribing client(".info + clientAddress + ") to topic stream '".info + actionMessage.payload.yellow + "'.".info);
-      subscribeTopic(actionMessage.payload);
+      subscribeTopic(actionMessage.payload, connection);
       break;
     case "unsubscribe_topic":
       console.log("Unsubscribing client(".info + clientAddress + ") from topic stream '".info + actionMessage.payload.yellow + "'.".info);
-      unsubscribeTopic(actionMessage.payload);
+      unsubscribeTopic(actionMessage.payload, connection);
       break;
   }
 }
 
-var subscribeTopic = function(topic){
+var subscribeTopic = function(topic, connection){
   var currentStream = null;
   twitter.stream('statuses/filter', {track: topic}, function(stream) {
     stream.on('data', function(tweet) {

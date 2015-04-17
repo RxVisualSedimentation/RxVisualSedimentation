@@ -52,27 +52,23 @@ function State() {
       if (body instanceof Circle) {
         body.updateRadius(deltaRadius);
       }
-      if (body instanceof Circle && (body.radius <= 1)) {
-        purgeBodies.push(body);
-      }
     });
 
-    this.bodies.concat(this.bodies.filter(function (body) {
-      return (body.position.x > 2 * w ||
-      body.position.x < -2 * w ||
-      body.position.y > 2 * h ||
-      body.position.y < -2 * h
-      );
-    }));
-
-    purgeBodies.map(function(b){
-      if(svg.select("#circle" + b.id)[0][0] !== null){
-        svg.select("#circle" + b.id).remove();
-      };
+    var purgeBodies = this.bodies.filter(function (body) {
+      var outsideEnvironment = body instanceof Circle &&
+        (body.position.x > 2 * w ||
+        body.position.x < -2 * w ||
+        body.position.y > 2 * h ||
+        body.position.y < -2 * h
+        );
+      var shrunk = body instanceof Circle && (body.radius <= 1);
+      return shrunk || outsideEnvironment;
+    }).map(function(body){
+      body.destroySVG();
     });
 
     this.bodies = this.bodies.filter(function (body) {
-      return purgeBodies.indexOf(body) === -1;
+      return purgeBodies.indexOf(body) < 0;
     })
     return this;
   }

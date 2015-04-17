@@ -75,8 +75,9 @@ Circle.prototype.createSVG = function () {
  * Destroy an SVG element for the circle.
  */
 Circle.prototype.destroySVG = function () {
-  svg.select("#circle" + this.id).remove();
-  this.drawn = false;
+  if(svg.select("#circle" + this.id)[0][0] !== null){
+    svg.select("#circle" + this.id).remove();
+  }
 }
 
 /**
