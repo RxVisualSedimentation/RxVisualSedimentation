@@ -19,6 +19,7 @@ function Pair(a, b) {
 Pair.obtainCollisions = function (pairs) {
   var collisions = [];
 
+  //return per collision and filter on not null
   pairs.map(function (pair) {
     var collision;
     if (pair.a instanceof Circle && pair.b instanceof Circle) {

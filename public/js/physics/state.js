@@ -15,6 +15,17 @@ function State() {
   this.addBody = function (body) {
     this.bodies.push(body);
   };
+  
+  /**
+   * Updates the restitution of the bodies
+   * @param restitution - the restitution to set
+   */
+  this.updateRestitution = function (restitution) {
+    this.bodies.map(function(body) { 
+      body.restitution = restitution;
+    })
+  };
+  
   /**
    * Update the state for the given delta time.
    * @param dt - delta time.
@@ -54,6 +65,109 @@ function State() {
  */
 State.init = function () {
   var state = new State();
+  var restitution = 0.7;
+  var size = 10;
+  
+  inputObservables.gravityX
+  .map(function (input) {
+    return parseFloat(input);
+  })
+  .filter(function (input) {
+    return !isNaN(input);
+  })
+  .subscribe(
+    function (x) {
+      state.gravity.x = x;
+      console.log("x: " + x);  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Gravity x update stream completed.");
+    }
+  );
+  
+  inputObservables.gravityY
+  .map(function (input) {
+    return parseFloat(input);
+  })
+  .filter(function (input) {
+    return !isNaN(input);
+  })
+  .subscribe(
+    function (y) {
+      state.gravity.y = y;
+      console.log("y: " + y);  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Gravity y update stream completed.");
+    }
+  );
+
+  inputObservables.size
+  .map(function (input) {
+    return parseFloat(input);
+  })
+  .filter(function (input) {
+    return !isNaN(input);
+  })
+  .subscribe(
+    function (x) {
+      size = x;
+      console.log("Size updated: " + x);  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Restitution update stream completed.");
+    }
+  );
+  
+  inputObservables.restitution
+  .map(function (input) {
+    return parseFloat(input);
+  })
+  .filter(function (input) {
+    return !isNaN(input);
+  })
+  .subscribe(
+    function (x) {
+      restitution = x;
+      state.updateRestitution(x);
+      console.log("restitution updated: " + x);  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Restitution update stream completed.");
+    }
+  );
+  
+  inputObservables.shrinking
+  .map(function (input) {
+    return parseFloat(input);
+  })
+  .filter(function (input) {
+    return !isNaN(input);
+  })
+  .subscribe(
+    function (value) {
+      state.deltaRadius = value;
+      console.log("Shrinking updated: " + value);  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Shrinking update stream completed.");
+    }
+  );
   
   var tweetObserver = new TweetObservable().subscribe(
     function (message) {
@@ -63,8 +177,8 @@ State.init = function () {
         console.log('This doesn\'t look like a valid JSON: ', message.data);
         return;
       }
-      console.log(tweet.created_at + " - " + tweet.user.name);
-      state.addBody(new Circle(new Vector(w/4, h/4), 10, new Vector(4, -2.5), 0.7, 1));
+      //console.log(tweet.created_at + " - " + tweet.user.name);
+      state.addBody(new Circle(new Vector(w/4, h/4), size, new Vector(4, -2.5), restitution, 1));
     },
     function (error) {
       console.log("Error occurred: ");

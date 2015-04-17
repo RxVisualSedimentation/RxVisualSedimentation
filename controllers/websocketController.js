@@ -9,7 +9,7 @@ module.exports.init = function (server, twitterClient) {
     var connection = request.accept('twitter-protocol', request.origin);
     console.log(new Date().toString().grey+ " " + connection.remoteAddress + ' Connection accepted.'.green);
     var currentStream;
-    twitterClient.stream('statuses/filter', {track: 'clinton'}, function(stream) {
+    twitterClient.stream('statuses/filter', {track: 'software'}, function(stream) {
       stream.on('data', function(tweet) {
         connection.sendUTF(JSON.stringify(tweet));
       });
