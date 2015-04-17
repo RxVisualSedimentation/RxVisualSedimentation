@@ -6,7 +6,7 @@
  */
 function State() {
   this.gravity = new Vector(0, 0.3);
-  this.deltaRadius = -0.001;
+  this.deltaRadius = 0;
   this.bodies = [];
   this.topics = [];
   this.emitters = [];
@@ -217,7 +217,28 @@ State.init = function () {
       console.log("Shrinking update stream completed.");
     }
   );
-
+  
+  inputObservables.spawn
+  .filter(function (input) {
+    return true;
+  })
+  .subscribe(
+    function (coordinates) {
+      var dx = coordinates.down.x - coordinates.up.x;
+      var dy = coordinates.down.y - coordinates.up.y;      
+      var vx = dx/10;
+      var vy = dy/10;
+      state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1));
+      console.log("Circle added at positition (" + coordinates.down.x + ", " + coordinates.down.y + ") with velocity: (" + vx + ", " + vy + ")" );  
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Circle spawn stream completed.");
+    }
+  );
+  
   var tweetObserver = new TweetObservable().subscribe(
     function (message) {
       try {

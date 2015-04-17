@@ -75,6 +75,26 @@ var initButtons = function () {
     return evt[0].target.value;
   });
   
+  inputObservables.initSpawn = Rx.Observable.fromEvent($('#environment'), 'mousedown', function (evt) {
+    return { x: evt[0].offsetX,
+            y: evt[0].offsetY
+           };
+  });
+  inputObservables.completeSpawn = Rx.Observable.fromEvent($('#environment'), 'mouseup', function (evt) {
+    return { x: evt[0].offsetX,
+            y: evt[0].offsetY
+           };
+  });
+  //When completeSpawn emits a value, combine it with the latest emission from initSpawn.
+  inputObservables.spawn = inputObservables.completeSpawn.withLatestFrom(inputObservables.initSpawn,
+    function (up, down) {
+      return { 
+              down: down,
+              up: up
+             };
+    }
+  );
+  
   //Incrementers and decrementers
   Rx.Observable.fromEvent($('#gravityX-dec'), 'click')
   .subscribe(
