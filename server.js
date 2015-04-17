@@ -10,7 +10,6 @@ var express         = require('express'),
 var server, wsServer, twitterClient;
 var port = 3000;
 
-
 //CONFIGURATION
 colors.setTheme(require('./config/colorTheme.js'));
 

@@ -2,7 +2,9 @@ function TweetObservable() {
   var connection = initWebsocket();
   
   connection.onopen = function () {
-    console.log("Connection succesfully opened");
+    console.log("Connection successfully opened");
+    connection.send(JSON.stringify(messageAction1));
+    connection.send(JSON.stringify(messageAction2));
   }
 
   //The function given as parameter to create will only get executed when subscribe is called on tweetObservable.
@@ -32,3 +34,12 @@ var initWebsocket = function () {
   }
   return connection;  
 }
+
+var messageAction1 = {
+  "action": "subscribe_topic",
+  "payload": "Software"
+};
+var messageAction2 = {
+  "action": "subscribe_topic",
+  "payload": "Obama"
+};
