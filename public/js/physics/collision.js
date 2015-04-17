@@ -128,7 +128,6 @@ Collision.rectangleVsCircle = function (pair) {
   var y_extent = a.height / 2;
 
   var n = Vector.subtract(b.position, a.position);
-
   var closest = new Vector(0, 0);
   closest.x = clamp(x_extent, n.x);
   closest.y = clamp(y_extent, n.y);
@@ -151,21 +150,28 @@ Collision.rectangleVsCircle = function (pair) {
         closest.y = -y_extent;
     }
   }
-
   var normal = Vector.subtract(n, closest);
   var d = normal.length();
   var r = b.radius;
 
 
   if (d > r && !inside) {
-    return false;
+    return null;
   }
-
+  
   if (inside) {
-    normal = Vector.multiply(Vector.divide(normal, d), -1);
+    if (d !== 0) {
+      normal = Vector.multiply(Vector.divide(normal, d), -1);
+    } else {
+      normal = new Vector(1, 0);
+    }
     return new Collision(a, b, r - d, normal);
   } else {
-    normal = Vector.divide(normal, d);
+    if (d !== 0) {
+      normal = Vector.divide(normal, d);
+    } else {
+      normal = new Vector(1, 0);
+    }
     return new Collision(a, b, r - d, normal);
   }
 };

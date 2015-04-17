@@ -97,8 +97,7 @@ var subscribeTopic = function (topic, connection) {
 var unsubscribeTopic = function (topic) {
   topicStreams.filter(function (stream) {
     return stream.topic === topic;
-  }).forEach(function (stream) {
-    console.log(stream);
+  }).forEach(function(stream) {
     stream.destroy();
   })
 }

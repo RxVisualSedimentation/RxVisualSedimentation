@@ -60,12 +60,15 @@ Circle.prototype.renderSVG = function () {
  * Creates an SVG element for the circle.
  */
 Circle.prototype.createSVG = function () {
+  if(erik){
+    this.color = '#'+('00000'+(Math.random()*(1<<24)|0).toString(16)).slice(-6);
+  }
   svg.append("circle").attr("r", this.radius)
     .attr("cx", this.position.x)
     .attr("cy", this.position.y)
     .attr("id", "circle" + this.id)
     .attr("class", "ball")
-    .style("fill", this.color);;
+    .style("fill", this.color);
   this.drawn = true;
 }
 

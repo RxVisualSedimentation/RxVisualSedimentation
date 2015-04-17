@@ -2,14 +2,17 @@
 
 var svg;
 var inputObservables = {};
-var w = 800,
+var w = 761,
   h = 600;
+var erik;
 
 /**
  * Initialize the environment.
  */
 var initEnvironment = function () {
+  erik = false;
   "use strict";
+  $("#environment").css("width", w).css("height", h);
   svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 };
 
@@ -58,7 +61,8 @@ var initButtons = function () {
       }
     );
   
-  //
+  inputObservables.reset = Rx.Observable.fromEvent($('#resetEnvironment'), 'click');
+  
   inputObservables.gravityX = Rx.Observable.fromEvent($('#gravityX'), 'change', function (evt) {
     return evt[0].target.value;
   });
@@ -74,6 +78,26 @@ var initButtons = function () {
   inputObservables.shrinking = Rx.Observable.fromEvent($('#shrinking'), 'change', function (evt) {
     return evt[0].target.value;
   });
+  
+  inputObservables.initSpawn = Rx.Observable.fromEvent($('#environment'), 'mousedown', function (evt) {
+    return { x: evt[0].offsetX,
+            y: evt[0].offsetY
+           };
+  });
+  inputObservables.completeSpawn = Rx.Observable.fromEvent($('#environment'), 'mouseup', function (evt) {
+    return { x: evt[0].offsetX,
+            y: evt[0].offsetY
+           };
+  });
+  //When completeSpawn emits a value, combine it with the latest emission from initSpawn.
+  inputObservables.spawn = inputObservables.completeSpawn.withLatestFrom(inputObservables.initSpawn,
+    function (up, down) {
+      return { 
+              down: down,
+              up: up
+             };
+    }
+  );
   
   //Incrementers and decrementers
   Rx.Observable.fromEvent($('#gravityX-dec'), 'click')
@@ -208,7 +232,7 @@ var initButtons = function () {
   .subscribe(
     function (evt) {
       var elem = $('#shrinking');
-      var val = Math.round((parseFloat(elem.val())-0.05) * 100) / 100;
+      var val = Math.round((parseFloat(elem.val())-0.01) * 100) / 100;
       elem.val(val);
       elem.change();
     },
@@ -224,7 +248,7 @@ var initButtons = function () {
   .subscribe(
     function (evt) {
       var elem = $('#shrinking');
-      var val = Math.round((parseFloat(elem.val())+0.05) * 100) / 100;
+      var val = Math.round((parseFloat(elem.val())+0.01) * 100) / 100;
       elem.val(val);
       elem.change();
     },
@@ -236,4 +260,69 @@ var initButtons = function () {
     }
   );
   
+  Rx.Observable.fromEvent($('#erik-meijerfy'), 'click')
+  .subscribe(
+    function () {
+      erik = !erik;
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Erik Meijerfy stream completed.");
+    }
+  );
+  
+  inputObservables.topic1 = Rx.Observable.fromEvent($('#topic1'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic2 = Rx.Observable.fromEvent($('#topic2'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic3 = Rx.Observable.fromEvent($('#topic3'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic4 = Rx.Observable.fromEvent($('#topic4'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
 };

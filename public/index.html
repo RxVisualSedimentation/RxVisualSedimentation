@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div class="container">
+  <div class="container noselect">
     <div class="page-header text-center">
       <h1>Rx Visual Sedimentation</h1>
       <p>Visual sedimentation implemented in RxJS.</p>
@@ -25,6 +25,9 @@
             <div class="col-md-12">
               <p>
                 <a id="subscribeClock" class="btn btn-success btn-block" type="button"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Start</a>
+              </p>
+              <p>
+                <a id="resetEnvironment" class="btn btn-warning btn-block"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Reset</a>
               </p>
               <p>
                 <a id="unsubscribeClock" class="btn btn-danger btn-block disabled"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop</a>
@@ -103,8 +106,33 @@
           </div>
         </div>
       </div>
-      <div class="col-md-10">
+      <div class="col-md-8">
         <div id="environment" class="center-block">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-heading">Stream topics</div>
+          <div class="panel-body">
+            <label for="topic1">Topic 1</label>
+            <input id="topic1" type="text" class="form-control text-center" value="">
+            <label for="topic2">Topic 2</label>
+            <input id="topic2" type="text" class="form-control text-center" value="">
+            <label for="topic3">Topic 3</label>
+            <input id="topic3" type="text" class="form-control text-center" value="">
+            <label for="topic4">Topic 4</label>
+            <input id="topic4" type="text" class="form-control text-center" value="">
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">Miscellaneous</div>
+          <div class="panel-body">
+            <div class="col-md-12">
+              <p>
+                <a id="erik-meijerfy" class="btn btn-info btn-block" type="button"><small><span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Erik Meijerfy</small></a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
