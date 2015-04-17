@@ -1,10 +1,12 @@
-function TweetObservable() {
-  var connection = initWebsocket();
-  
+
+var connection;
+
+function ButtonWarObservable() {
+  connection = initWebsocket();
+
   connection.onopen = function () {
     console.log("Connection successfully opened");
-    connection.send(JSON.stringify(messageAction1));
-    connection.send(JSON.stringify(messageAction2));
+    registerUser();
   }
 
   //The function given as parameter to create will only get executed when subscribe is called on tweetObservable.
@@ -20,7 +22,7 @@ function TweetObservable() {
     connection.onclose = function () {
       observer.onCompleted();
     }
-  }); 
+  });
 }
 
 var initWebsocket = function () {
@@ -32,22 +34,9 @@ var initWebsocket = function () {
     console.log("Your browser does not support websockets");
     return;
   }
-  return connection;  
+  return connection;
 }
 
-var messageAction1 = {
-  "action": "subscribe_topic",
-  "payload": "Obama"
-};
-var messageAction2 = {
-  "action": "subscribe_topic",
-  "payload": "Obama"
-};
-var messageAction3 = {
-  "action": "subscribe_topic",
-  "payload": "Google"
-};
-var messageAction4 = {
-  "action": "subscribe_topic",
-  "payload": "Microsoft"
-};
+var registerUser = function () {
+  connection.send(JSON.stringify({action: "register_user"}));
+}

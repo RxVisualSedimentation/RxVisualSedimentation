@@ -7,4 +7,8 @@ module.exports = function (app, express) {
   app.get('/', function (req, res) {
     res.sendFile(__dirname + "/public/index.html");
   });
+
+  app.get('/button', function (req, res) {
+    res.sendFile(__dirname + "/public/button.html");
+  });
 };
