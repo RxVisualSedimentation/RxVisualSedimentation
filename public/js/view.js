@@ -58,7 +58,8 @@ var initButtons = function () {
       }
     );
   
-  //
+  inputObservables.reset = Rx.Observable.fromEvent($('#resetEnvironment'), 'click');
+  
   inputObservables.gravityX = Rx.Observable.fromEvent($('#gravityX'), 'change', function (evt) {
     return evt[0].target.value;
   });

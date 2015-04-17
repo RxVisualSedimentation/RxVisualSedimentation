@@ -29,6 +29,18 @@ function State() {
     })
   };
   
+  this.resetEnvironment = function () { 
+    this.bodies.filter(function(body) { 
+      return body instanceof Circle;
+    })
+    .map(function(body) { 
+      body.destroySVG();
+    });
+    this.bodies = this.bodies.filter(function(body) { 
+      return !(body instanceof Circle);
+    })
+  }
+  
   /**
    * Update the state for the given delta time.
    * @param dt - delta time.
@@ -116,6 +128,20 @@ State.init = function () {
   var state = new State();
   var restitution = 0.7;
   var size = 10;
+  
+  inputObservables.reset
+  .subscribe(
+    function (x) {
+      state.resetEnvironment();
+      console.log("resetting")
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Reset environment stream completed.");
+    }
+  );  
   
   inputObservables.gravityX
   .map(function (input) {
@@ -219,9 +245,6 @@ State.init = function () {
   );
   
   inputObservables.spawn
-  .filter(function (input) {
-    return true;
-  })
   .subscribe(
     function (coordinates) {
       var dx = coordinates.down.x - coordinates.up.x;
