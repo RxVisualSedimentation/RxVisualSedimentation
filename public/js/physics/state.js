@@ -133,7 +133,6 @@ State.init = function () {
   .subscribe(
     function (x) {
       state.resetEnvironment();
-      console.log("resetting")
     },
     function (err) {
       console.log('error: ' + err);
@@ -260,7 +259,7 @@ State.init = function () {
     function () {
       console.log("Circle spawn stream completed.");
     }
-  );
+  );  
   
   var tweetObserver = new TweetObservable().subscribe(
     function (message) {

@@ -4,11 +4,13 @@ var svg;
 var inputObservables = {};
 var w = 800,
   h = 600;
+var erik;
 
 /**
  * Initialize the environment.
  */
 var initEnvironment = function () {
+  erik = false;
   "use strict";
   svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 };
@@ -229,7 +231,7 @@ var initButtons = function () {
   .subscribe(
     function (evt) {
       var elem = $('#shrinking');
-      var val = Math.round((parseFloat(elem.val())-0.05) * 100) / 100;
+      var val = Math.round((parseFloat(elem.val())-0.01) * 100) / 100;
       elem.val(val);
       elem.change();
     },
@@ -245,7 +247,7 @@ var initButtons = function () {
   .subscribe(
     function (evt) {
       var elem = $('#shrinking');
-      var val = Math.round((parseFloat(elem.val())+0.05) * 100) / 100;
+      var val = Math.round((parseFloat(elem.val())+0.01) * 100) / 100;
       elem.val(val);
       elem.change();
     },
@@ -257,4 +259,16 @@ var initButtons = function () {
     }
   );
   
+  Rx.Observable.fromEvent($('#erik-meijerfy'), 'click')
+  .subscribe(
+    function () {
+      erik = !erik;
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Erik Meijerfy stream completed.");
+    }
+  );
 };
