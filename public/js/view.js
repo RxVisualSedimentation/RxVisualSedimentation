@@ -272,4 +272,57 @@ var initButtons = function () {
       console.log("Erik Meijerfy stream completed.");
     }
   );
+  
+  inputObservables.topic1 = Rx.Observable.fromEvent($('#topic1'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic2 = Rx.Observable.fromEvent($('#topic2'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic3 = Rx.Observable.fromEvent($('#topic3'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
+  inputObservables.topic4 = Rx.Observable.fromEvent($('#topic4'), 'change', function (evt) {
+    return evt[0].target.value;
+  }).scan(
+    {
+      last: "",
+      current: ""
+    },
+    function (topicTuple, topic) {
+      return {
+        last: topicTuple.current,
+        current: topic
+      };
+    });
 };

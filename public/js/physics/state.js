@@ -250,7 +250,7 @@ State.init = function () {
       var dy = coordinates.down.y - coordinates.up.y;      
       var vx = dx/10;
       var vy = dy/10;
-      state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1));
+      state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1, "#00a6d6"));
       console.log("Circle added at positition (" + coordinates.down.x + ", " + coordinates.down.y + ") with velocity: (" + vx + ", " + vy + ")" );  
     },
     function (err) {
