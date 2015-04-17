@@ -2,7 +2,7 @@
 
 var svg;
 var inputObservables = {};
-var w = 800,
+var w = 761,
   h = 600;
 var erik;
 
@@ -12,6 +12,7 @@ var erik;
 var initEnvironment = function () {
   erik = false;
   "use strict";
+  $("#environment").css("width", w).css("height", h);
   svg = d3.select("#environment").insert("svg").attr("width", w).attr("height", h);
 };
 
