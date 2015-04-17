@@ -47,14 +47,13 @@ function State() {
    * @returns {State} - The updated state.
    */
   this.update = function (dt) {
-    var pairs = generatePairs(this.bodies);
-    var collisions = Pair.obtainCollisions(pairs);
     var gravity = this.gravity;
     var deltaRadius = this.deltaRadius;
-
-    collisions.map(function (collision) {
-      collision.resolve();
-    });
+    var pairs = generatePairs(this.bodies);
+    Pair.obtainCollisions(pairs)
+      .map(function (collision) {
+        collision.resolve();
+      });
 
     var purgeBodies = [];
 
