@@ -29,20 +29,31 @@ function State() {
     })
   };
   
+  this.resetEnvironment = function () { 
+    this.bodies.filter(function(body) { 
+      return body instanceof Circle;
+    })
+    .map(function(body) { 
+      body.destroySVG();
+    });
+    this.bodies = this.bodies.filter(function(body) { 
+      return !(body instanceof Circle);
+    })
+  }
+  
   /**
    * Update the state for the given delta time.
    * @param dt - delta time.
    * @returns {State} - The updated state.
    */
   this.update = function (dt) {
-    var pairs = generatePairs(this.bodies);
-    var collisions = Pair.obtainCollisions(pairs);
     var gravity = this.gravity;
     var deltaRadius = this.deltaRadius;
-
-    collisions.map(function (collision) {
-      collision.resolve();
-    });
+    var pairs = generatePairs(this.bodies);
+    Pair.obtainCollisions(pairs)
+      .map(function (collision) {
+        collision.resolve();
+      });
 
     var purgeBodies = [];
 
@@ -116,6 +127,19 @@ State.init = function () {
   var state = new State();
   var restitution = 0.7;
   var size = 10;
+  
+  inputObservables.reset
+  .subscribe(
+    function (x) {
+      state.resetEnvironment();
+    },
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Reset environment stream completed.");
+    }
+  );  
   
   inputObservables.gravityX
   .map(function (input) {
@@ -219,17 +243,13 @@ State.init = function () {
   );
   
   inputObservables.spawn
-  .filter(function (input) {
-    return true;
-  })
   .subscribe(
     function (coordinates) {
       var dx = coordinates.down.x - coordinates.up.x;
       var dy = coordinates.down.y - coordinates.up.y;      
       var vx = dx/10;
       var vy = dy/10;
-      state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1));
-      console.log("Circle added at positition (" + coordinates.down.x + ", " + coordinates.down.y + ") with velocity: (" + vx + ", " + vy + ")" );  
+      state.addBody(new Circle(new Vector(coordinates.down.x, coordinates.down.y), size, new Vector(vx, vy), restitution, 1, "#00a6d6")); 
     },
     function (err) {
       console.log('error: ' + err);
@@ -237,7 +257,7 @@ State.init = function () {
     function () {
       console.log("Circle spawn stream completed.");
     }
-  );
+  );  
   
   var tweetObserver = new TweetObservable().subscribe(
     function (message) {

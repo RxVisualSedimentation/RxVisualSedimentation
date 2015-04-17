@@ -20,23 +20,22 @@ Pair.obtainCollisions = function (pairs) {
   var collisions = [];
 
   //return per collision and filter on not null
-  pairs.map(function (pair) {
-    var collision;
-    if (pair.a instanceof Circle && pair.b instanceof Circle) {
-      collision = Collision.circleVsCircle(pair);
-    } else if (pair.a instanceof Rectangle && pair.b instanceof Rectangle) {
-      collision = Collision.rectangleVsRectangle(pair);
-    } else if (pair.a instanceof Circle && pair.b instanceof Rectangle) {
-      var temp = pair.a;
-      pair.a = pair.b;
-      pair.b = temp;
-      collision = Collision.rectangleVsCircle(pair);
-    } else if (pair.a instanceof Rectangle && pair.b instanceof Circle && !collision) {
-      collision = Collision.rectangleVsCircle(pair);
-    }
-    if (collision) {
-      collisions.push(collision);
-    }
-  });
-  return collisions;
+  return pairs
+    .map(function (pair) {
+      if (pair.a instanceof Circle && pair.b instanceof Circle) {
+        return Collision.circleVsCircle(pair);
+      } else if (pair.a instanceof Rectangle && pair.b instanceof Rectangle) {
+        return Collision.rectangleVsRectangle(pair);
+      } else if (pair.a instanceof Circle && pair.b instanceof Rectangle) {
+        var temp = pair.a;
+        pair.a = pair.b;
+        pair.b = temp;
+        return Collision.rectangleVsCircle(pair);
+      } else if (pair.a instanceof Rectangle && pair.b instanceof Circle) {
+        return Collision.rectangleVsCircle(pair);
+      }
+    })
+    .filter(function (collision) {
+      return collision !== null;
+    });
 };

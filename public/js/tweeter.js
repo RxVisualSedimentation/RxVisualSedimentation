@@ -3,9 +3,31 @@ function TweetObservable() {
   
   connection.onopen = function () {
     console.log("Connection successfully opened");
-    connection.send(JSON.stringify(messageAction1));
-    connection.send(JSON.stringify(messageAction2));
   }
+  
+  function topicOnNext(tuple) {
+    var message = {};
+
+    if(tuple.current!==""){
+      message.action = "subscribe_topic";
+      message.payload = tuple.current;
+      connection.send(JSON.stringify(message)) 
+    }
+    message.action = "unsubscribe_topic";
+    message.payload = tuple.last;
+    connection.send(JSON.stringify(message)) 
+
+  }
+  
+  inputObservables.topic1
+  .subscribe(topicOnNext,
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Topic update stream completed.");
+    }
+  );
 
   //The function given as parameter to create will only get executed when subscribe is called on tweetObservable.
   return Rx.Observable.create(function (observer) {

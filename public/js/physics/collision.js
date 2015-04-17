@@ -156,7 +156,7 @@ Collision.rectangleVsCircle = function (pair) {
 
 
   if (d > r && !inside) {
-    return false;
+    return null;
   }
   
   if (inside) {
