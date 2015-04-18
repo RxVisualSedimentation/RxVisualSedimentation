@@ -56,20 +56,3 @@ var initWebsocket = function () {
   }
   return connection;  
 }
-
-var messageAction1 = {
-  "action": "subscribe_topic",
-  "payload": "Obama"
-};
-var messageAction2 = {
-  "action": "subscribe_topic",
-  "payload": "Obama"
-};
-var messageAction3 = {
-  "action": "subscribe_topic",
-  "payload": "Google"
-};
-var messageAction4 = {
-  "action": "subscribe_topic",
-  "payload": "Microsoft"
-};

@@ -261,6 +261,7 @@ State.init = function () {
   
   var tweetObserver = new TweetObservable().subscribe(
     function (message) {
+      console.log(message);
       try {
         var tweet = JSON.parse(message.data);
       } catch (e) {

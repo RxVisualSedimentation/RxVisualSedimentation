@@ -28,7 +28,8 @@
     "express": "^4.12.2",
     "morgan": "^1.5.2",
     "twitter": "^1.2.5",
-    "websocket": "^1.0.18"
+    "websocket": "^1.0.18",
+    "rx": "2.5.2"
   },
   "devDependencies": {
     "mocha": "*",

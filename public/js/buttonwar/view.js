@@ -1,5 +1,4 @@
 var initButtons = function () {
-  var clicks = 0;
   var green = 255;
   var red = 0;
   Rx.Observable.fromEvent($('#clickButton'), 'click')
