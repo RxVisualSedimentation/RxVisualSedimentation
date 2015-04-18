@@ -20,7 +20,7 @@ module.exports.init = function (server, twitterClients) {
       conn = connection;
       console.log(new Date().toString().grey + " " + connection.remoteAddress + ' Connection accepted.'.green);
       connection.on('message', function (message) {
-        observer.onNext({message: JSON.parse(message.utf8Data), connection : connection});
+        observer.onNext({message: JSON.parse(message.utf8Data), connection: connection});
       });
 
       connection.on('close', function (reasonCode, description) {
@@ -33,7 +33,7 @@ module.exports.init = function (server, twitterClients) {
     });
   }).groupBy(function (m) {
     return m.message.action;
-  },function (m) {
+  }, function (m) {
     return m;
   }).subscribe(
     function (obs) {
@@ -42,7 +42,6 @@ module.exports.init = function (server, twitterClients) {
         parseActions(x.message, x.connection);
       });
       messageObservables[obs.key] = obs;
-      console.log(JSON.stringify(messageObservables));
     });
 };
 
@@ -92,19 +91,18 @@ var requestNewTeam = function () {
 
 var subscribeTopic = function (topic, connection) {
   var currentStream = null;
-  connection.sendUTF(JSON.stringify("zar"));
-  if(topic=="Team0" && messageObservables["button_war_click"]) {
+  if (topic.indexOf("Team") === 0 && messageObservables["button_war_click"]) {
     currentStream = messageObservables["button_war_click"];
-    console.log("Team0!!!!! - " + JSON.stringify(currentStream));
-    currentStream = currentStream.subscribe(function(x){
-      var m = x.message;
-      m.topic = topic;
-      console.log(JSON.stringify(m));
-      console.log("User " + m.payload.id + " clicked for team " + m.payload.team + ".");
-      connection.sendUTF(JSON.stringify(m))
+    currentStream = currentStream.subscribe(function (x) {
+      if (topic.substring(4) == x.message.payload.team) {
+        var m = x.message;
+        m.topic = topic;
+        console.log(JSON.stringify(m));
+        console.log("User " + m.payload.id + " clicked for team " + m.payload.team + ".");
+        connection.sendUTF(JSON.stringify(m))
+      }
     });
-    currentStream.destroy = function(){
-      //messageObservables["button_war_click"].dispose();
+    currentStream.destroy = function () {
     }
   } else {
     var twitter = topicStreams.length < 2 ? twitterClientList[0] : twitterClientList[1];
