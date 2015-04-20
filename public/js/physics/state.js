@@ -74,13 +74,16 @@ function State() {
         );
       var shrunk = body instanceof Circle && (body.radius <= 1);
       return shrunk || outsideEnvironment;
-    }).map(function(body){
+    });
+    
+    purgeBodies.map(function(body){
       body.destroySVG();
+      return body;
     });
 
     this.bodies = this.bodies.filter(function (body) {
-      return purgeBodies.indexOf(body) < 0;
-    })
+      return purgeBodies.indexOf(body) === -1;
+  });
     return this;
   }
 
