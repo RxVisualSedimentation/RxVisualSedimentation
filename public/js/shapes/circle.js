@@ -43,7 +43,7 @@ Circle.prototype.updatePosition = function (dt) {
  */
 Circle.prototype.updateRadius = function (delta_radius) {
   this.radius += delta_radius;
-  //this.inv_mass = this.radius !==0 ? 1/(this.radius*2) : 9001;
+  this.inv_mass = this.radius !==0 ? 1/(this.radius*2) : 9001;
 };
 
 /**
