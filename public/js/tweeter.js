@@ -28,6 +28,33 @@ function TweetObservable() {
       console.log("Topic update stream completed.");
     }
   );
+  inputObservables.topic2
+    .subscribe(topicOnNext,
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Topic update stream completed.");
+    }
+  );
+  inputObservables.topic3
+    .subscribe(topicOnNext,
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Topic update stream completed.");
+    }
+  );
+  inputObservables.topic4
+    .subscribe(topicOnNext,
+    function (err) {
+      console.log('error: ' + err);
+    },
+    function () {
+      console.log("Topic update stream completed.");
+    }
+  );
 
   //The function given as parameter to create will only get executed when subscribe is called on tweetObservable.
   return Rx.Observable.create(function (observer) {
@@ -56,12 +83,3 @@ var initWebsocket = function () {
   }
   return connection;  
 }
-
-var messageAction1 = {
-  "action": "subscribe_topic",
-  "payload": "Software"
-};
-var messageAction2 = {
-  "action": "subscribe_topic",
-  "payload": "Obama"
-};

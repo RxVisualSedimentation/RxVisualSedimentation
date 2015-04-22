@@ -7,7 +7,7 @@ var express         = require('express'),
   colors            = require('colors'),
   app               = express();
 
-var server, wsServer, twitterClient;
+var server, wsServer;
 var port = 3000;
 
 //CONFIGURATION
@@ -36,10 +36,12 @@ wsServer = new WebSocketServer({
 });
 
 var twitterCredentials = require('./config/twitterCredentials.js');
-twitterClient = new Twitter(twitterCredentials);  
+var twitterClients = [];
+twitterClients.push(new Twitter(twitterCredentials[0]));
+twitterClients.push(new Twitter(twitterCredentials[1]));
 
 var websocketController = require('./controllers/websocketController');
-websocketController.init(wsServer, twitterClient);
+websocketController.init(wsServer, twitterClients);
 
 //ROUTES
 require('./routes.js')(app, express);
