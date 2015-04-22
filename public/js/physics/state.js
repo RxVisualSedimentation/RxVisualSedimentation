@@ -99,7 +99,6 @@ function State() {
     //Re-add color if necessary, cannot use forEach as we need access to this.randomColors
     for(var i=0; i<this.emitters.length; i++){
       if(this.emitters[i].topic == lastTopic) {
-        console.log(this.emitters[i]);
         if (this.randomColors.indexOf(this.emitters[i].color) === -1) {
           this.randomColors.push(this.emitters[i].color);
         }
@@ -109,6 +108,7 @@ function State() {
     this.emitters = this.emitters.filter(function(emitter) {
       return emitter.topic !== lastTopic;
     });
+    
     if (this.topics.indexOf(givenTopic) === -1) {
       this.topics.push(givenTopic);
       this.emitters.push(new Emitter(givenTopic, new Vector(w / 2, h / 2), new Vector(1, -1), this.randomColors.shift()));
