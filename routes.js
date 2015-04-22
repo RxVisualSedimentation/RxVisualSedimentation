@@ -4,7 +4,7 @@ module.exports = function (app, express) {
   app.use('/css', express.static(__dirname + '/public/css'));
   app.use('/js', express.static(__dirname + '/public/js'));
 
-  app.get('/', function (req, res) {
+  app.get('/llllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIlllIIllIlllIlllIllllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIlllIIllIlllIlllIllllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIlllIIllIlllIlllIllllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIllIlIIlIlIlIlIlIlIlIlIIlllIIllIlllIlllI', function (req, res) {
     res.sendFile(__dirname + "/public/index.html");
   });
 
