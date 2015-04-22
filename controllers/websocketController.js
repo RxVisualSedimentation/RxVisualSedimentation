@@ -30,7 +30,7 @@ module.exports.init = function (server, twitterClients) {
         topicStreams.forEach(function (stream) {
           stream.destroy();
         });
-        observer.onCompleted();
+       // observer.onCompleted();
         console.log(new Date().toString().grey + " " + connection.remoteAddress + ' Disconnected.'.yellow);
       });
     });
