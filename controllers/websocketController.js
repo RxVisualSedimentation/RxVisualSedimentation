@@ -27,10 +27,10 @@ module.exports.init = function (server, twitterClients) {
       });
 
       connection.on('close', function (reasonCode, description) {
-        topicStreams.forEach(function (stream) {
-          stream.destroy();
-        });
-        observer.onCompleted();
+//        topicStreams.forEach(function (stream) {
+//          stream.destroy();
+//        });
+//        observer.onCompleted();
         console.log(new Date().toString().grey + " " + connection.remoteAddress + ' Disconnected.'.yellow);
       });
     });
