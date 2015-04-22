@@ -10,11 +10,11 @@ function TweetObservable() {
 
     if(tuple.current!==""){
       message.action = "subscribe_topic";
-      message.payload = tuple.current;
+      message.payload = tuple;
       connection.send(JSON.stringify(message)) 
     }
     message.action = "unsubscribe_topic";
-    message.payload = tuple.last;
+    message.payload = tuple;
     connection.send(JSON.stringify(message)) 
 
   }

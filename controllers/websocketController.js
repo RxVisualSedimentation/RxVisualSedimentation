@@ -66,19 +66,18 @@ module.exports.init = function (server, twitterClients) {
 var getOnNext = function (request) {
   var actionMessage = request.message;
   var connection = request.connection;
-
   if (actionMessage.action) {
     switch (actionMessage.action) {
     case 'subscribe_topic':
       //onNext for subscribe topic message
       return function () {
-        console.log("Subscribing client(".info + connection.remoteAddress + ") to topic stream '".info + actionMessage.payload.yellow + "'.".info);
+        console.log("Subscribing client(".info + connection.remoteAddress + ") to topic stream '".info + actionMessage.payload.current.yellow + "'.".info);
         subscribeTopic(actionMessage.payload, connection);
       };
     case "unsubscribe_topic":
       //onNext for unsubscribe topic message
       return function () {
-        console.log("Unsubscribing client(".info + connection.remoteAddress + ") from topic stream '".info + actionMessage.payload.yellow + "'.".info);
+        console.log("Unsubscribing client(".info + connection.remoteAddress + ") from topic stream '".info + actionMessage.payload.last.yellow + "'.".info);
         unsubscribeTopic(actionMessage.payload, connection);
       };
     case "register_user":
@@ -128,7 +127,8 @@ var requestNewTeam = function () {
   return minIndex;
 }
 
-var subscribeTopic = function (topic, connection) {
+var subscribeTopic = function (tuple, connection) {
+  var topic = tuple.current;
   var currentStream = null;
   if (topic.indexOf("Team") === 0 && messageObservables["button_war_click"]) {
     currentStream = messageObservables["button_war_click"];
@@ -136,6 +136,7 @@ var subscribeTopic = function (topic, connection) {
       if (topic.substring(4) == x.message.payload.team) {
         var m = x.message;
         m.topic = topic;
+        m.lastTopic = tuple.last;
         console.log(JSON.stringify(m));
         console.log("User " + m.payload.id + " clicked for team " + m.payload.team + ".");
         connection.sendUTF(JSON.stringify(m))
@@ -149,6 +150,7 @@ var subscribeTopic = function (topic, connection) {
     }, function (stream) {
       stream.on('data', function (tweet) {
         tweet.topic = topic;
+        tweet.lastTopic = tuple.last;
         connection.sendUTF(JSON.stringify(tweet));
       });
       stream.on('error', function (error) {
@@ -161,7 +163,8 @@ var subscribeTopic = function (topic, connection) {
   topicStreams.push(currentStream);
 }
 
-var unsubscribeTopic = function (topic) {
+var unsubscribeTopic = function (tuple) {
+  var topic = tuple.last;
   topicStreams.filter(function (stream) {
     return stream.topic === topic;
   }).forEach(function (stream) {

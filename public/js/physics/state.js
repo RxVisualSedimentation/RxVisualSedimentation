@@ -10,7 +10,12 @@ function State() {
   this.bodies = [];
   this.topics = [];
   this.emitters = [];
-
+  this.randomColors = ["#556270",
+                       "#4ECDC4",
+                       "#C7F464",
+                       "#FF6B6B",
+                       "#C44D58"];
+  
   /**
    * Add bodies to the environment.
    * @param body - the to be added body.
@@ -87,10 +92,26 @@ function State() {
     return this;
   }
 
-  this.processTopic = function (givenTopic) {
+  this.processTopic = function (givenTopic, lastTopic) {
+    this.topics = this.topics.filter(function(topic) {
+      return topic !== lastTopic;
+    });
+    //Re-add color if necessary, cannot use forEach as we need access to this.randomColors
+    for(var i=0; i<this.emitters.length; i++){
+      if(this.emitters[i].topic == lastTopic) {
+        console.log(this.emitters[i]);
+        if (this.randomColors.indexOf(this.emitters[i].color) === -1) {
+          this.randomColors.push(this.emitters[i].color);
+        }
+      }
+    }
+    //update emitters array
+    this.emitters = this.emitters.filter(function(emitter) {
+      return emitter.topic !== lastTopic;
+    });
     if (this.topics.indexOf(givenTopic) === -1) {
       this.topics.push(givenTopic);
-      this.emitters.push(new Emitter(givenTopic, new Vector(w / 2, h / 2), new Vector(1, -1)));
+      this.emitters.push(new Emitter(givenTopic, new Vector(w / 2, h / 2), new Vector(1, -1), this.randomColors.shift()));
       this.adjustEmitters();
     }
   }
@@ -98,13 +119,7 @@ function State() {
   this.adjustEmitters = function () {
     var spacing = (w / (this.emitters.length + 1));
     svg.selectAll("text").remove();
-    var randomColors = ["#556270",
-      "#4ECDC4",
-      "#C7F464",
-      "#FF6B6B",
-      "#C44D58"]
     this.emitters.forEach(function (emitter, index) {
-      emitter.color = randomColors[index];
       emitter.position = new Vector(spacing * (index + 1), h / 4);
       svg.append("text")
         .attr("x", emitter.position.x-50)
@@ -116,10 +131,11 @@ function State() {
   }
 }
 
-function Emitter(topic, position, velocity) {
+function Emitter(topic, position, velocity, color) {
   this.topic = topic;
   this.position = position;
   this.velocity = velocity;
+  this.color = color;
 }
 
 /**
@@ -270,7 +286,7 @@ State.init = function () {
         console.log('This doesn\'t look like a valid JSON: ', message.data);
         return;
       }
-      state.processTopic(tweet.topic);
+      state.processTopic(tweet.topic, tweet.lastTopic);
       state.emitters.filter(function (emitter) {
         return emitter.topic == tweet.topic;
       }).forEach(function (emitter) {
